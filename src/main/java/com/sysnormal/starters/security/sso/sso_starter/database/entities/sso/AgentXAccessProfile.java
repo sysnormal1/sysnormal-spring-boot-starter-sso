@@ -1,0 +1,48 @@
+package com.sysnormal.starters.security.sso.sso_starter.database.entities.sso;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+@Getter
+@Setter
+@Entity
+@Table(
+        name = "agents_x_access_profiles",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "agents_x_access_profiles_u1",
+                        columnNames = {
+                                "(coalesce(parent_id, -1))","record_status_id",
+                                "agent_id",
+                                "access_profile_id"
+                        }
+                )
+        }
+)
+public class AgentXAccessProfile extends BaseSsoEntity<AgentXAccessProfile> {
+
+    @Column(name = "agent_id", nullable = false)
+    private Long agentId;
+
+    @Column(name = "access_profile_id", nullable = false)
+    private Long accessProfileId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agent_id", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Agent agent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "access_profile_id", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private AccessProfile accessProfile;
+
+
+
+}

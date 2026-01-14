@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=\
+com.sysnormal.starters.security.sso.sso_starter.configs.PreDataSourceDatabaseInitializer
