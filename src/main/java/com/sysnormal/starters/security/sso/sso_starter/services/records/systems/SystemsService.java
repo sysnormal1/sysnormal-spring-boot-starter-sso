@@ -1,8 +1,8 @@
 package com.sysnormal.starters.security.sso.sso_starter.services.records.systems;
 
+import com.sysnormal.starters.security.sso.sso_starter.database.entities.sso.System;
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.SystemsRepository;
 import com.sysnormal.starters.security.sso.sso_starter.services.records.BaseSsoRecordsService;
-import com.sysnormal.starters.security.sso.sso_starter.database.entities.sso.System;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -57,12 +57,16 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
 
     public Specification<E> getSpecificationFromJsonNode(JsonNode params) {
         Specification<E> result = null;
-        JsonNode queryParams = params.path("queryParams");
-        if (queryParams != null && !queryParams.isEmpty()) {
-            JsonNode where = queryParams.path("where");
-            if (where != null && !where.isEmpty()) {
-                result = DatabaseUtils.fromWhere(where);
+        try {
+            JsonNode queryParams = params.path("queryParams");
+            if (queryParams != null && !queryParams.isEmpty()) {
+                JsonNode where = queryParams.path("where");
+                if (where != null && !where.isEmpty()) {
+                    result = DatabaseUtils.fromWhere(where);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -89,6 +93,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             }
             result.success = true;
         } catch (Exception e) {
+            e.printStackTrace();
             result.setException(e);
         }
         return result;
