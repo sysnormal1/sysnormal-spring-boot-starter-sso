@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Check;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
+import org.hibernate.type.SqlTypes;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 
@@ -50,17 +49,24 @@ public class ResourcePermission extends BaseSsoEntity<ResourcePermission> {
     @Column(name = "allowed_access", nullable = false)
     @ColumnDefault("1")
     @Check(constraints = "allowed_access in (0,1)")
+    @Comment("represents the access according resource type, like execute on method, executable or process, access option url, file, endpoint, or other accessible object, etc")
     private byte allowedAccess = 1;
+
+    @Column(name = "allowed_view", nullable = false)
+    @ColumnDefault("1")
+    @Check(constraints = "allowed_view in (0,1)")
+    @Comment("represents the access to view resource, like view url, view table or column data, view file content, etc")
+    private byte allowedView = 1;
 
     @Column(name = "allowed_create", nullable = false)
     @ColumnDefault("0")
     @Check(constraints = "allowed_create in (0,1)")
     private byte allowedCreate = 0;
 
-    @Column(name = "allowed_update", nullable = false)
+    @Column(name = "allowed_change", nullable = false)
     @ColumnDefault("0")
-    @Check(constraints = "allowed_update in (0,1)")
-    private byte allowedUpdate = 0;
+    @Check(constraints = "allowed_change in (0,1)")
+    private byte allowedChange = 0;
 
     @Column(name = "allowed_delete", nullable = false)
     @ColumnDefault("0")
@@ -70,7 +76,11 @@ public class ResourcePermission extends BaseSsoEntity<ResourcePermission> {
     @Column(name = "condition", length = Integer.MAX_VALUE)
     private String condition;
 
-    @Column(name = "notes")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "json_data")
+    private JsonNode jsonData;
+
+    @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)

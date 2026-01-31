@@ -29,7 +29,7 @@ public class SystemSide extends BaseSsoEntity<SystemSide> {
     @Column(name = "name", nullable = false, length = 127)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
     @Column(name = "is_server", nullable = false)
@@ -42,7 +42,7 @@ public class SystemSide extends BaseSsoEntity<SystemSide> {
     @Check(constraints = "is_client in (0,1)")
     private byte isClient = 0;
 
-    @Column(name = "notes")
+    @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;
 
     public static final long WITHOUT_SIDE_ID = 0;

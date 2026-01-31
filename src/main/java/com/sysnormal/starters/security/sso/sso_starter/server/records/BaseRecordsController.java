@@ -21,12 +21,19 @@ public abstract class BaseRecordsController<S extends BaseSsoRecordsService<? ex
     }
 
 
-    @PostMapping("/get")
+    @RequestMapping(
+            path = { "/", "/get", "/get/" },
+            method = { RequestMethod.GET, RequestMethod.POST }
+    )
     public ResponseEntity<DefaultDataSwap> get(@RequestBody(required = false) JsonNode body) {
+        //@todo implement generic middleware to check if this resource (detect requested endpoint) is allowed to this user (resource and resource_permission tables store theses permissions)
         return service.get(body).sendHttpResponse();
     }
 
-    @PostMapping("/get/{id}")
+    @RequestMapping(
+            path = { "/{id}", "/get/{id}", "/get/{id}/" },
+            method = { RequestMethod.GET, RequestMethod.POST }
+    )
     public ResponseEntity<DefaultDataSwap> getById(@PathVariable("id") Long id, @RequestBody(required = false) JsonNode body) {
         return service.getById(id, body).sendHttpResponse();
     }

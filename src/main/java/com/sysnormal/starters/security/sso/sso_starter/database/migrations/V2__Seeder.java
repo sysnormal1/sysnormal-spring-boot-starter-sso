@@ -1,6 +1,7 @@
 package com.sysnormal.starters.security.sso.sso_starter.database.migrations;
 
 import com.sysnormal.libs.utils.database.JpaReflectionUtils;
+import com.sysnormal.starters.security.sso.sso_starter.configs.AppInitializer;
 import com.sysnormal.starters.security.sso.sso_starter.database.entities.sso.*;
 import com.sysnormal.starters.security.sso.sso_starter.database.entities.sso.System;
 import org.apache.tomcat.util.buf.StringUtils;
@@ -28,17 +29,18 @@ public class V2__Seeder extends BaseJavaMigration {
             }
 
             //AGENTS
-            String[] fieldsNames = new String[]{"id", "is_sys_rec", "identifier", "email", "security"};
-            String[] valuesBinders = new String[]{"?", "?", "?", "?", "?"};
+            String[] fieldsNames = new String[]{"id", "is_sys_rec", "identifier_type_id","identifier", "email", "password"};
+            String[] valuesBinders = new String[]{"?", "?", "?", "?", "?", "?"};
             query = "insert ignore into " + JpaReflectionUtils.resolveTableName(Agent.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
+
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
                 ps.setLong(1, Agent.SYSTEM_ID);
                 ps.setByte(2, Agent.SYSTEM.getIsSysRec());
-                ps.setString(3, Agent.SYSTEM.getIdentifier());
-                ps.setString(4, Agent.SYSTEM.getEmail());
-                ps.setString(5, encoder.encode(Agent.SYSTEM.getPassword()));
-
+                ps.setLong(3, Agent.SYSTEM.getIdentifierTypeId());
+                ps.setString(4, Agent.SYSTEM.getIdentifier());
+                ps.setString(5, Agent.SYSTEM.getEmail());
+                ps.setString(6, Agent.SYSTEM.getPassword());
                 ps.executeUpdate();
             }
 
@@ -343,6 +345,41 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.executeUpdate();
             }
 
+            //RESOURCE_PERMISSIONS
+            fieldsNames = new String[]{"is_sys_rec", "resource_id", "access_profile_id"};
+            valuesBinders = new String[]{"?", "?", "?"};
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(ResourcePermission.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            logger.debug("Executing query: {}", query);
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setByte(1, (byte) 1);
+                ps.setLong(2, Resource.SYSTEMS_ID);
+                ps.setLong(3, AccessProfile.SYSTEM_ID);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setByte(1, (byte) 1);
+                ps.setLong(2, Resource.ACCESS_PROFILES_ID);
+                ps.setLong(3, AccessProfile.SYSTEM_ID);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setByte(1, (byte) 1);
+                ps.setLong(2, Resource.AGENTS_ID);
+                ps.setLong(3, AccessProfile.SYSTEM_ID);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setByte(1, (byte) 1);
+                ps.setLong(2, Resource.RESOURCES_ID);
+                ps.setLong(3, AccessProfile.SYSTEM_ID);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setByte(1, (byte) 1);
+                ps.setLong(2, Resource.RESOURCE_PERMISSIONS_ID);
+                ps.setLong(3, AccessProfile.SYSTEM_ID);
+                ps.executeUpdate();
+            }
 
             query = "SET FOREIGN_KEY_CHECKS = 1";
             logger.debug("Executing query: {}", query);

@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import tools.jackson.databind.JsonNode;
 
 @Getter
 @Setter
@@ -29,13 +32,20 @@ public class AccessProfile extends BaseSsoEntity<AccessProfile> {
     @Column(name = "name", nullable = false, length = 127)
     private String name;
 
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
     @Column(name = "allow_access_to_all_module_routines", nullable = false, length = 1)
     @ColumnDefault("0")
     @Check(constraints = "allow_access_to_all_module_routines in (0,1)")
     private byte allowAccessToAllModuleRoutines = 0;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "json_data")
+    private JsonNode jsonData;
+
+    @Column(name = "notes", length = Integer.MAX_VALUE)
+    private String notes;
 
     public static final long SYSTEM_ID = 1;
 

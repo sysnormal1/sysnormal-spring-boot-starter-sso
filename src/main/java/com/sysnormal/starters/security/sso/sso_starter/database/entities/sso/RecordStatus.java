@@ -28,12 +28,15 @@ public class RecordStatus extends BaseSsoEntity<RecordStatus> {
     @Column(name = "name", nullable = false, length = 127)
     private String name;
 
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
     @Column(name = "is_active", nullable = false)
     @ColumnDefault("1")
     private byte isActive = 1;
+
+    @Column(name = "notes", length = Integer.MAX_VALUE)
+    private String notes;
 
 
     // Constantes equivalentes

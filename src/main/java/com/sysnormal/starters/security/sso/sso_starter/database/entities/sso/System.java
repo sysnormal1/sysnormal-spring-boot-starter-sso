@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import tools.jackson.databind.JsonNode;
 
 @Entity
 @Getter
@@ -33,10 +36,14 @@ public class System extends BaseSsoEntity<System> {
     @Column(name = "name", length = 127, nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "notes")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "json_data")
+    private JsonNode jsonData;
+
+    @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;
 
 

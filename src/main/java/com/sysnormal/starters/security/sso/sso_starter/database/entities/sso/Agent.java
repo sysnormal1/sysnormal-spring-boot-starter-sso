@@ -1,10 +1,21 @@
 package com.sysnormal.starters.security.sso.sso_starter.database.entities.sso;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sysnormal.starters.security.sso.sso_starter.configs.AppInitializer;
+import com.sysnormal.starters.security.sso.sso_starter.database.migrations.V2__Seeder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import tools.jackson.databind.JsonNode;
+
+import java.lang.System;
 
 /**
  * agent
@@ -31,6 +42,8 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 public class Agent extends BaseSsoEntity<Agent> {
+    private static final Logger logger = LoggerFactory.getLogger(Agent.class);
+    private static final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Column(name = "identifier_type_id", nullable = false)
     @ColumnDefault(IdentifierType.EMAIL_ID + "")
@@ -43,14 +56,11 @@ public class Agent extends BaseSsoEntity<Agent> {
     private String email;
 
     @JsonIgnore
-    @Column(name = "security", length = 1000)
+    @Column(name = "password", length = 1000)
     private String password;
 
     @Column(name = "alias")
     private String alias;
-
-    @Column(name = "notes", length = 1000)
-    private String notes;
 
     @Column(name = "last_token", length = 1000)
     private String lastToken;
@@ -64,6 +74,13 @@ public class Agent extends BaseSsoEntity<Agent> {
     @Column(name = "token_expiration_time")
     private Long tokenExpirationTime;
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "json_data")
+    private JsonNode jsonData;
+
+    @Column(name = "notes", length = Integer.MAX_VALUE)
+    private String notes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "identifier_type_id", nullable = false, updatable = false, insertable = false)
     @JsonIgnore
@@ -74,8 +91,22 @@ public class Agent extends BaseSsoEntity<Agent> {
     public static final Agent SYSTEM = new Agent(){{
         setId(SYSTEM_ID);
         setIsSysRec((byte) 1);
-        setIdentifier("system@system");
-        setEmail("system@system");
-        setPassword("system");
+        setIdentifierTypeId(IdentifierType.EMAIL_ID);
+
+        String systemEmail = AppInitializer.getInstance().getENV().getProperty(
+                "spring.security.system-user.email",
+                java.lang.System.getenv().getOrDefault("SYSTEM_USER_EMAIL", "system@system")
+        );
+        String systemPassword = AppInitializer.getInstance().getENV().getProperty(
+                "spring.security.system-user.password",
+                java.lang.System.getenv().getOrDefault("SYSTEM_USER_PASSWORD", "system")
+        );
+
+        logger.debug("xxxxxxxxxxxxx agent static creation {} {}", systemEmail, systemPassword);
+
+
+        setIdentifier(systemEmail);
+        setEmail(systemEmail);
+        setPassword(encoder.encode(systemPassword));
     }};
 }

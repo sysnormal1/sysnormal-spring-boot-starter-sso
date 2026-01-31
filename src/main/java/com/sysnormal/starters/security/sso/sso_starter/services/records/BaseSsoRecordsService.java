@@ -56,7 +56,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
     }
 
     public Specification<E> getSpecificationFromJsonNode(JsonNode params) {
-        Specification<E> result = null;
+        Specification<E> result = (root, query, cb) -> null;
         try {
             JsonNode queryParams = params.path("queryParams");
             if (queryParams != null && !queryParams.isEmpty()) {
@@ -78,7 +78,10 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
 
             Specification<E> specification = getSpecificationFromJsonNode(params);
 
-            if (specification != null) {
+
+
+            result.data = repository.findAll(specification);
+            /*if (specification != null) {
                 result.data = repository.findAll(specification);
                 finded = true;
             }
@@ -90,7 +93,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             }
             if (!finded) {
                 result.data = repository.findAll();
-            }
+            }*/
             result.success = true;
         } catch (Exception e) {
             e.printStackTrace();

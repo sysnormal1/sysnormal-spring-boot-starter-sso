@@ -26,11 +26,14 @@ public class IdentifierType extends BaseSsoEntity<IdentifierType> {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "process_to_validate", length = 1000)
+    @Column(name = "process_to_validate", length = Integer.MAX_VALUE)
     private String processToValidate;
+
+    @Column(name = "notes", length = Integer.MAX_VALUE)
+    private String notes;
 
 
     public static final long IDENTIFIER_ID = 1;
