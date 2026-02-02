@@ -125,6 +125,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.10.2</version>
+		</dependency>
+
 		<!-- Sysnormal libs -->
 		<dependency>
 			<groupId>com.sysnormal.libs</groupId>
