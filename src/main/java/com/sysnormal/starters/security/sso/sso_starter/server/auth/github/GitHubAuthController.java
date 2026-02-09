@@ -1,7 +1,7 @@
 package com.sysnormal.starters.security.sso.sso_starter.server.auth.github;
 
 import com.sysnormal.libs.commons.DefaultDataSwap;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.oauth2.dtos.HandleCodeDTO;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
 import com.sysnormal.starters.security.sso.sso_starter.services.auth.github.GitHubAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +37,12 @@ public class GitHubAuthController {
     /**
      * Handle OAuth callback code
      *
-     * @param handleCodeDto DTO containing code and redirect URI
+     * @param agentAuthDto DTO containing code and redirect URI
      * @return response entity with authentication result
      */
     @PostMapping("/handle_code")
-    public ResponseEntity<?> handleCode(@RequestBody HandleCodeDTO handleCodeDto) {
+    public ResponseEntity<?> handleCode(@RequestBody AgentAuthDto agentAuthDto) {
         logger.debug("requested handle_code for GitHub");
-        return gitHubAuthService.handleCode(handleCodeDto).sendHttpResponse();
+        return gitHubAuthService.handleCode(agentAuthDto).sendHttpResponse();
     }
 }

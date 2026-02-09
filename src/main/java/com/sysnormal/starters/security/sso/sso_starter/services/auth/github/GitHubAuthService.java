@@ -8,8 +8,7 @@ import com.sysnormal.starters.security.sso.sso_starter.helpers.http.HttpUtils;
 import com.sysnormal.starters.security.sso.sso_starter.helpers.security.PasswordUtils;
 import com.sysnormal.starters.security.sso.sso_starter.properties.auth.github.GitHubAuthProperties;
 import com.sysnormal.starters.security.sso.sso_starter.properties.security.SecurityProperties;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentRequestDTO;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.oauth2.dtos.HandleCodeDTO;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
 import com.sysnormal.starters.security.sso.sso_starter.services.auth.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,13 +72,13 @@ public class GitHubAuthService {
         return result;
     }
 
-    public DefaultDataSwap handleCode(HandleCodeDTO handleCodeDTO) {
+    public DefaultDataSwap handleCode(AgentAuthDto agentAuthDto) {
         DefaultDataSwap result = new DefaultDataSwap();
         try {
-            logger.debug("handling GitHub code {}, redirectUri {}", handleCodeDTO.getCode(), handleCodeDTO.getRedirectUri());
+            logger.debug("handling GitHub code {}, redirectUri {}", agentAuthDto.getCode(), agentAuthDto.getRedirectUri());
 
             // Trocar o código pelo access token
-            String accessToken = exchangeCodeForToken(handleCodeDTO);
+            String accessToken = exchangeCodeForToken(agentAuthDto);
 
             logger.debug("Successfully obtained access token");
 
@@ -98,14 +97,13 @@ public class GitHubAuthService {
                         email.trim().toLowerCase()
                 );
                 if (agent.isPresent()) {
-                    result = authenticationService.getAuthDataResult(agent, false, null, null, true, null);
+                    result = authenticationService.getAuthDataResult(agentAuthDto, agent, false, null,  true, null);
                 } else {
                     String password = PasswordUtils.generateCompliantPassword(email, securityProperties.getPasswordRules());
-                    AgentRequestDTO agentRequestDTO = new AgentRequestDTO();
-                    agentRequestDTO.setIdentifier(email);
-                    agentRequestDTO.setEmail(email);
-                    agentRequestDTO.setPassword(password);
-                    result = authenticationService.register(agentRequestDTO);
+                    agentAuthDto.setIdentifier(email);
+                    agentAuthDto.setEmail(email);
+                    agentAuthDto.setPassword(password);
+                    result = authenticationService.register(agentAuthDto);
                 }
             } else {
                 throw new Exception("Agent info does not contain email");
@@ -117,12 +115,12 @@ public class GitHubAuthService {
         return result;
     }
 
-    private String exchangeCodeForToken(HandleCodeDTO handleCodeDTO) throws Exception {
+    private String exchangeCodeForToken(AgentAuthDto agentAuthDto) throws Exception {
         HashMap<String, String> body = new HashMap<>();
         body.put("client_id", properties.getClientId());
         body.put("client_secret", properties.getClientSecret());
-        body.put("code", handleCodeDTO.getCode());
-        body.put("redirect_uri", handleCodeDTO.getRedirectUri());
+        body.put("code", agentAuthDto.getCode());
+        body.put("redirect_uri", agentAuthDto.getRedirectUri());
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(GITHUB_TOKEN_URL))

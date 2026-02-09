@@ -8,8 +8,7 @@ import com.sysnormal.starters.security.sso.sso_starter.helpers.http.HttpUtils;
 import com.sysnormal.starters.security.sso.sso_starter.helpers.security.PasswordUtils;
 import com.sysnormal.starters.security.sso.sso_starter.properties.auth.google.GoogleAuthProperties;
 import com.sysnormal.starters.security.sso.sso_starter.properties.security.SecurityProperties;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentRequestDTO;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.oauth2.dtos.HandleCodeDTO;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
 import com.sysnormal.starters.security.sso.sso_starter.services.auth.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,16 +70,16 @@ public class GoogleAuthService {
 
 
 
-    public DefaultDataSwap handleCode(HandleCodeDTO handleCodeDTO) {
+    public DefaultDataSwap handleCode(AgentAuthDto agentAuthDto) {
         DefaultDataSwap result = new DefaultDataSwap();
         try {
-            logger.debug("handling google code {}, redirectUri {}", handleCodeDTO.getCode(), handleCodeDTO.getRedirectUri());
+            logger.debug("handling google code {}, redirectUri {}", agentAuthDto.getCode(), agentAuthDto.getRedirectUri());
 
             HashMap<String, String> body = new HashMap<String, String>();
-            body.put("code", handleCodeDTO.getCode());
+            body.put("code", agentAuthDto.getCode());
             body.put("client_id", properties.getClientId());
             body.put("client_secret", properties.getClientSecret());
-            body.put("redirect_uri", handleCodeDTO.getRedirectUri()); // o mesmo usado no passo 1
+            body.put("redirect_uri", agentAuthDto.getRedirectUri()); // o mesmo usado no passo 1
             body.put("grant_type", "authorization_code");
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -114,14 +113,13 @@ public class GoogleAuthService {
                         email.trim().toLowerCase()
                 );
                 if (agent.isPresent()) {
-                    result = authenticationService.getAuthDataResult(agent, false, null, null, true, null);
+                    result = authenticationService.getAuthDataResult(agentAuthDto, agent, false, null,  true, null);
                 } else {
                     String password = PasswordUtils.generateCompliantPassword(email, securityProperties.getPasswordRules());
-                    AgentRequestDTO agentRequestDTO = new AgentRequestDTO();
-                    agentRequestDTO.setIdentifier(email);
-                    agentRequestDTO.setEmail(email);
-                    agentRequestDTO.setPassword(password);
-                    result = authenticationService.register(agentRequestDTO);
+                    agentAuthDto.setIdentifier(email);
+                    agentAuthDto.setEmail(email);
+                    agentAuthDto.setPassword(password);
+                    result = authenticationService.register(agentAuthDto);
                 }
             } else {
                 throw new Exception("token info not contains identifier");

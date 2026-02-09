@@ -56,11 +56,14 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
     }
 
     public Specification<E> getSpecificationFromJsonNode(JsonNode params) {
+        logger.debug("INIT {}.{}", this.getClass().getSimpleName(), "getSpecificationFromJsonNode");
         Specification<E> result = (root, query, cb) -> null;
         try {
             JsonNode queryParams = params.path("queryParams");
+            logger.debug("queryParams: {}", queryParams.toString());
             if (queryParams != null && !queryParams.isEmpty()) {
                 JsonNode where = queryParams.path("where");
+                logger.debug("where: {}", where.toString());
                 if (where != null && !where.isEmpty()) {
                     result = DatabaseUtils.fromWhere(where);
                 }
@@ -68,37 +71,21 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
         } catch (Exception e) {
             e.printStackTrace();
         }
+        logger.debug("END {}.{}", this.getClass().getSimpleName(), "getSpecificationFromJsonNode");
         return result;
     }
 
     public DefaultDataSwap get(JsonNode params){
+        logger.debug("INIT {}.{}", this.getClass().getSimpleName(), "get");
         DefaultDataSwap result = new DefaultDataSwap();
         try {
-            boolean finded = false;
-
-            Specification<E> specification = getSpecificationFromJsonNode(params);
-
-
-
-            result.data = repository.findAll(specification);
-            /*if (specification != null) {
-                result.data = repository.findAll(specification);
-                finded = true;
-            }
-
-            boolean isIdAndNameAttributes = checkIfIsIdAndNameAttributes(params);
-            if (isIdAndNameAttributes) {
-                result.data = repository.findAllBy(IdAndNameProjection.class);
-                finded = true;
-            }
-            if (!finded) {
-                result.data = repository.findAll();
-            }*/
+            result.data = repository.findAll(getSpecificationFromJsonNode(params));
             result.success = true;
         } catch (Exception e) {
             e.printStackTrace();
             result.setException(e);
         }
+        logger.debug("END {}.{}", this.getClass().getSimpleName(), "get");
         return result;
     }
 

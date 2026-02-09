@@ -2,7 +2,6 @@ package com.sysnormal.starters.security.sso.sso_starter.database.entities.sso;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sysnormal.starters.security.sso.sso_starter.configs.AppInitializer;
-import com.sysnormal.starters.security.sso.sso_starter.database.migrations.V2__Seeder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import tools.jackson.databind.JsonNode;
-
-import java.lang.System;
 
 /**
  * agent

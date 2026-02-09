@@ -1,7 +1,9 @@
 package com.sysnormal.starters.security.sso.sso_starter.server.auth;
 
 import com.sysnormal.libs.commons.DefaultDataSwap;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.*;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.RefreshTokenRequestDTO;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.TokenRequestDTO;
 import com.sysnormal.starters.security.sso.sso_starter.services.auth.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,25 +36,25 @@ public class AuthenticationController {
     /**
      * login
      *
-     * @param agentRequestDTO the agent parameters
+     * @param agentAuthDto the agent parameters
      * @return response entity
      */
     @PostMapping("/login")
-    public ResponseEntity<DefaultDataSwap> login(@RequestBody(required = false) AgentRequestDTO agentRequestDTO) {
-        logger.debug("requested login {}",agentRequestDTO != null ? agentRequestDTO.getIdentifier() : null);
-        return authenticationService.login(agentRequestDTO).sendHttpResponse();
+    public ResponseEntity<DefaultDataSwap> login(@RequestBody(required = false) AgentAuthDto agentAuthDto) {
+        logger.debug("requested login {}", agentAuthDto != null ? agentAuthDto.getIdentifier() : null);
+        return authenticationService.login(agentAuthDto).sendHttpResponse();
     }
 
     /**
      * register
      *
-     * @param agentRequestDTO the agent parameters
+     * @param agentAuthDto the agent parameters
      * @return response entity
      */
     @PostMapping("/register")
-    public ResponseEntity<DefaultDataSwap> register(@RequestBody(required = false) AgentRequestDTO agentRequestDTO) {
-        logger.debug("requested register {}",agentRequestDTO != null ? agentRequestDTO.getIdentifier() : null);
-        return authenticationService.register(agentRequestDTO).sendHttpResponse();
+    public ResponseEntity<DefaultDataSwap> register(@RequestBody(required = false) AgentAuthDto agentAuthDto) {
+        logger.debug("requested register {}", agentAuthDto != null ? agentAuthDto.getIdentifier() : null);
+        return authenticationService.register(agentAuthDto).sendHttpResponse();
     }
 
     /**
@@ -82,24 +84,24 @@ public class AuthenticationController {
     /**
      * sendEmailRecoverPassword
      *
-     * @param passwordRecoverRequestDTO the password recover parameters
+     * @param agentAuthDto the password recover parameters
      * @return response entity
      */
     @PostMapping("/send_email_recover_password")
-    public ResponseEntity<DefaultDataSwap> sendEmailRecoverPassword(@RequestBody(required = false) PasswordRecoverRequestDTO passwordRecoverRequestDTO) {
-        logger.debug("requested send_email_recover_password {}",passwordRecoverRequestDTO != null ? passwordRecoverRequestDTO.getIdentifier() + "," +  passwordRecoverRequestDTO.getPasswordChangeInterfacePath() : null);
-        return authenticationService.sendEmailRecoverPasswordFromDto(passwordRecoverRequestDTO).sendHttpResponse();
+    public ResponseEntity<DefaultDataSwap> sendEmailRecoverPassword(@RequestBody(required = false) AgentAuthDto agentAuthDto) {
+        logger.debug("requested send_email_recover_password {}",agentAuthDto != null ? agentAuthDto.getIdentifier() + "," +  agentAuthDto.getPasswordChangeInterfacePath() : null);
+        return authenticationService.sendEmailRecoverPasswordFromDto(agentAuthDto).sendHttpResponse();
     }
 
     /**
      * password_change
      *
-     * @param passwordChangeRequestDTO the password change parameters
+     * @param agentAuthDto the password change parameters
      * @return response entity
      */
     @PostMapping("/password_change")
-    public ResponseEntity<DefaultDataSwap> passwordChange(@RequestBody(required = false) PasswordChangeRequestDTO passwordChangeRequestDTO) {
-        logger.debug("requested password_change {}",passwordChangeRequestDTO != null ? passwordChangeRequestDTO.getToken() : null);
-        return authenticationService.passwordChangeFromDto(passwordChangeRequestDTO).sendHttpResponse();
+    public ResponseEntity<DefaultDataSwap> passwordChange(@RequestBody(required = false) AgentAuthDto agentAuthDto) {
+        logger.debug("requested password_change {}",agentAuthDto != null ? agentAuthDto.getToken() : null);
+        return authenticationService.passwordChangeFromDto(agentAuthDto).sendHttpResponse();
     }
 }

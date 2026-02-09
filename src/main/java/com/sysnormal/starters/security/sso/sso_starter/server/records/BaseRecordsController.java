@@ -27,6 +27,7 @@ public abstract class BaseRecordsController<S extends BaseSsoRecordsService<? ex
     )
     public ResponseEntity<DefaultDataSwap> get(@RequestBody(required = false) JsonNode body) {
         //@todo implement generic middleware to check if this resource (detect requested endpoint) is allowed to this user (resource and resource_permission tables store theses permissions)
+
         return service.get(body).sendHttpResponse();
     }
 

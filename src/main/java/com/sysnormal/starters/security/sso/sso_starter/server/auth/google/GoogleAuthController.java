@@ -1,7 +1,7 @@
 package com.sysnormal.starters.security.sso.sso_starter.server.auth.google;
 
 import com.sysnormal.libs.commons.DefaultDataSwap;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.oauth2.dtos.HandleCodeDTO;
+import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
 import com.sysnormal.starters.security.sso.sso_starter.services.auth.google.GoogleAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +37,8 @@ public class GoogleAuthController {
     }
 
     @PostMapping("/handle_code")
-    public ResponseEntity<?> handleCode(@RequestBody(required = false) HandleCodeDTO handlecodeDto) {
+    public ResponseEntity<?> handleCode(@RequestBody(required = false) AgentAuthDto agentAuthDto) {
         logger.debug("requested handle_code");
-        return googleAuthService.handleCode(handlecodeDto).sendHttpResponse();
+        return googleAuthService.handleCode(agentAuthDto).sendHttpResponse();
     }
 }

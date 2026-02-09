@@ -57,21 +57,21 @@ public class System extends BaseSsoEntity<System> {
     @JsonIgnore
     private SystemSide systemSide;
 
-    public static final long THIS_ID = 1;
-    public static final long DEFAULT_WEB_CLIENT_ID = 2;
+    public static final long SSO_SERVER_ID = 1;
+    public static final long SSO_WEBCLIENT_ID = 2;
 
-    public static final System THIS = new System(){{
-        setId(THIS_ID);
+    public static final System SSO_SERVER = new System(){{
+        setId(SSO_SERVER_ID);
         setIsSysRec((byte) 1);
-        setName("THIS");
+        setName("SSO SERVER");
         setSystemPlatformId(SystemPlatform.DESKTOP_ID);
         setSystemSideId(SystemSide.SERVER_SIDE_ID);
     }};
 
-    public static final System DEFAULT_WEB_CLIENT = new System(){{
-        setId(DEFAULT_WEB_CLIENT_ID);
+    public static final System SSO_WEBCLIENT = new System(){{
+        setId(SSO_WEBCLIENT_ID);
         setIsSysRec((byte) 1);
-        setName("DEFAULT_WEB_CLIENT");
+        setName("SSO WEBCLIENT");
         setSystemPlatformId(SystemPlatform.WEB_ID);
         setSystemSideId(SystemSide.CLIENT_SIDE_ID);
     }};
