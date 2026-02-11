@@ -9,6 +9,7 @@ import com.sysnormal.starters.security.sso.sso_starter.database.entities.sso.Sys
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.AgentsRepository;
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.ResourcePermissionsRepository;
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.SystemsRepository;
+import com.sysnormal.starters.security.sso.sso_starter.properties.jwt.JwtProperties;
 import com.sysnormal.starters.security.sso.sso_starter.properties.security.SecurityProperties;
 import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
 import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.RefreshTokenRequestDTO;
@@ -45,6 +46,8 @@ public class AuthenticationService {
 
     private final SecurityProperties properties;
 
+    private final JwtProperties jwtProperties;
+
 
     @Autowired
     JwtService jwtService;
@@ -67,8 +70,9 @@ public class AuthenticationService {
 
     private static final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public AuthenticationService(SecurityProperties properties) {
+    public AuthenticationService(SecurityProperties properties,  JwtProperties jwtProperties) {
         this.properties = properties;
+        this.jwtProperties = jwtProperties;
     }
 
 
@@ -136,36 +140,37 @@ public class AuthenticationService {
         try {
 
             if (agentAuthDto != null) {
-                if (agentAuthDto.getSystemId() != null) {
-                    if (StringUtils.hasText(agentAuthDto.getPassword())) {
-                        String identifier = agentAuthDto.getIdentifier();
-                        Optional<Agent> optionalAgent = Optional.empty();
-                        if (StringUtils.hasText(identifier)) {
-                            Long identifierTypeId = agentAuthDto.getIdentifierTypeId();
-                            if (identifierTypeId == null) {
-                                if (mailService.isValidEmail(identifier)) {
-                                    identifierTypeId = IdentifierType.EMAIL_ID;
-                                } else {
-                                    identifierTypeId = IdentifierType.IDENTIFIER_ID;
-                                }
-                            }
-                            optionalAgent = agentsRepository.findByIdentifierTypeIdAndIdentifier(
-                                    identifierTypeId,
-                                    identifier.trim().toLowerCase()
-                            );
-                        } else {
-                            String email = agentAuthDto.getEmail();
-                            if (StringUtils.hasText(email)) {
-                                optionalAgent = agentsRepository.findByEmail(email.trim().toLowerCase());
+                if (StringUtils.hasText(agentAuthDto.getPassword())) {
+                    String identifier = agentAuthDto.getIdentifier();
+                    Optional<Agent> optionalAgent = Optional.empty();
+                    if (StringUtils.hasText(identifier)) {
+                        Long identifierTypeId = agentAuthDto.getIdentifierTypeId();
+                        if (identifierTypeId == null) {
+                            if (mailService.isValidEmail(identifier)) {
+                                identifierTypeId = IdentifierType.EMAIL_ID;
                             } else {
-                                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
-                                result.message = "missing identifier or email";
+                                identifierTypeId = IdentifierType.IDENTIFIER_ID;
                             }
                         }
-                        if (optionalAgent.isPresent()) {
-                            if (RecordStatus.ACTIVE_ID == optionalAgent.get().getRecordStatusId()) {
-                                agentAuthDto.setAgentId(optionalAgent.get().getId());
+                        optionalAgent = agentsRepository.findByIdentifierTypeIdAndIdentifier(
+                                identifierTypeId,
+                                identifier.trim().toLowerCase()
+                        );
+                    } else {
+                        String email = agentAuthDto.getEmail();
+                        if (StringUtils.hasText(email)) {
+                            optionalAgent = agentsRepository.findByEmail(email.trim().toLowerCase());
+                        } else {
+                            result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
+                            result.message = "missing identifier or email";
+                        }
+                    }
+                    if (optionalAgent.isPresent()) {
+                        if (RecordStatus.ACTIVE_ID == optionalAgent.get().getRecordStatusId()) {
+                            agentAuthDto.setAgentId(optionalAgent.get().getId());
+                            agentAuthDto.setExpiration(jwtProperties.getDefaultTokenExpiration());
 
+                            if (agentAuthDto.getSystemId() != null) {
                                 //check if system exists
                                 Optional<System> optionalSystem = systemsRepository.findById(agentAuthDto.getSystemId());
 
@@ -176,6 +181,8 @@ public class AuthenticationService {
 
                                     //check if user is relation to the system with direct agentxsystem or accessprofilexsystem
                                     boolean agentIsRelationedToSystem = agentsRepository.agentIsRelationToSystem(optionalAgent.get().getId(), optionalSystem.get().getId()) != 0;
+
+
 
                                     if (agentIsRelationedToSystem) {
                                         result = getAuthDataResult(
@@ -195,20 +202,26 @@ public class AuthenticationService {
                                     result.message = "system not found";
                                 }
                             } else {
-                                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
-                                result.message = "agent is not active";
+                                result = getAuthDataResult(
+                                        agentAuthDto,
+                                        optionalAgent,
+                                        true,
+                                        null,
+                                        true,
+                                        null
+                                );
                             }
-                        } else if (!StringUtils.hasText(result.message)) {
+                        } else {
                             result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
-                            result.message = "agent not found";
+                            result.message = "agent is not active";
                         }
-                    } else {
+                    } else if (!StringUtils.hasText(result.message)) {
                         result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
-                        result.message = "missing password";
+                        result.message = "agent not found";
                     }
                 } else {
                     result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
-                    result.message = "missing system id";
+                    result.message = "missing password";
                 }
             } else {
                 result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
@@ -366,6 +379,7 @@ public class AuthenticationService {
                     if (mailService.isValidEmail(email)) {
                         Optional<Agent> agent = agentsRepository.findByEmail(email.trim().toLowerCase());
                         if (agent.isPresent()) {
+                            agentAuthDto.setExpiration(jwtProperties.getDefaultRefreshTokenExpiration());
                             agent.get().setLastPasswordChangeToken(jwtService.createToken(agentAuthDto));
                             agentsRepository.save(agent.get());
                             String subject = "Password Recover";

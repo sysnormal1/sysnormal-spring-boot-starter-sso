@@ -13,16 +13,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AgentAuthDto {
-    private Long systemId;
-    private Long accessProfileId;
-    private Long agentId;
+    private Long systemId = null;
+    private Long accessProfileId = null;
+    private Long agentId = null;
     private Long identifierTypeId = IdentifierType.EMAIL_ID;
-    private String identifier;
-    private String email;
-    private String password;
-    private Long expiration;
-    private String token;
-    private String passwordChangeInterfacePath;
-    private String code;
-    private String redirectUri;
+    private String identifier = null;
+    private String email = null;
+    private String password = null;
+    private Long expiration = null;
+    private String token = null;
+    private String passwordChangeInterfacePath = null;
+    private String code = null;
+    private String redirectUri = null;
 }

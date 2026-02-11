@@ -1,6 +1,8 @@
 package com.sysnormal.starters.security.sso.sso_starter.services.jwt;
 
 import com.sysnormal.libs.commons.DefaultDataSwap;
+import com.sysnormal.libs.utils.ObjectUtils;
+import com.sysnormal.libs.utils.TextUtils;
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.AgentsRepository;
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.SystemsRepository;
 import com.sysnormal.starters.security.sso.sso_starter.properties.jwt.JwtProperties;
@@ -18,6 +20,7 @@ import org.springframework.util.StringUtils;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * jwt service
@@ -58,17 +61,21 @@ public class JwtService {
         JwtBuilder builder = Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setSubject(String.valueOf(agentAuthDto.getAgentId()))
-                .claim("agent_id", agentAuthDto.getAgentId())
-                .claim("system_id", agentAuthDto.getSystemId())
+                .claim("agentId", agentAuthDto.getAgentId())
+                .claim("systemId", agentAuthDto.getSystemId())
                 .setIssuedAt(new Date());
 
         // claim opcional
         if (agentAuthDto.getAccessProfileId() != null) {
-            builder.claim("access_profile_id", agentAuthDto.getAccessProfileId());
+            builder.claim("accessProfileId", agentAuthDto.getAccessProfileId());
         }
 
-        if (agentAuthDto.getExpiration() != null && agentAuthDto.getExpiration() > 0) {
-            builder.setExpiration(new Date(System.currentTimeMillis() + agentAuthDto.getExpiration()));
+        if (agentAuthDto.getExpiration() != null) {
+            if (agentAuthDto.getExpiration() > 0) {
+                builder.setExpiration(new Date(System.currentTimeMillis() + agentAuthDto.getExpiration()));
+            }
+        } else {
+            builder.setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getDefaultTokenExpiration()));
         }
 
         return builder.compact();
@@ -98,12 +105,11 @@ public class JwtService {
             logger.debug("checking token {}",token);
             if (StringUtils.hasText(token)) {
                 Claims claims = jwtParsaer.parseClaimsJws(token).getBody();
-                String agentId = String.valueOf(claims.get("agent_id"));
-                if (StringUtils.hasText(agentId)) {
-                    AgentAuthDto agentAuthDto = new AgentAuthDto();
-                    agentAuthDto.setAgentId(Long.valueOf(agentId));
-                    agentAuthDto.setSystemId(Long.valueOf(String.valueOf(claims.get("system_id"))));
-                    agentAuthDto.setAccessProfileId(Long.valueOf(String.valueOf(claims.get("access_profile_id"))));
+                AgentAuthDto agentAuthDto = new AgentAuthDto();
+                ObjectUtils.setLongPropertyFromMap(claims,"agentId",agentAuthDto::setAgentId);
+                if (agentAuthDto.getAgentId() != null) {
+                    ObjectUtils.setLongPropertyFromMap(claims,"systemId",agentAuthDto::setSystemId);
+                    ObjectUtils.setLongPropertyFromMap(claims,"accessProfileId",agentAuthDto::setAccessProfileId);
 
                     //result = agentsRepository.checkTokenData(agentAuthDto.getAgentId(),agentAuthDto.getSystemId(), agentAuthDto.getAccessProfileId());
 
