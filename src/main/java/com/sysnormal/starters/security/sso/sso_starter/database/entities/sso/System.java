@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.JsonNode;
 
 @Entity
 @Getter
@@ -41,7 +40,7 @@ public class System extends BaseSsoEntity<System> {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "json_data")
-    private JsonNode jsonData;
+    private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;

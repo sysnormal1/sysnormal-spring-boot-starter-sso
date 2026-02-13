@@ -44,7 +44,7 @@ public class ResourcesController extends BaseRecordsController<ResourcesService>
             if (body != null && body.has("token")) {
                 String token = body.get("token").asText();
 
-                Claims claims = jwtService.parseToken(token);
+                Claims claims = jwtService.getClaims(token);
                 Long agentId = claims.get("agentId", Long.class);
                 Long systemId = claims.get("systemId", Long.class);
                 Long accessProfileId = claims.get("accessProfileId", Long.class);

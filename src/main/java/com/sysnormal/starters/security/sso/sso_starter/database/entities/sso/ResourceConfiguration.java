@@ -8,7 +8,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.JsonNode;
 
 @Getter
 @Setter
@@ -41,7 +40,7 @@ public class ResourceConfiguration extends BaseSsoEntity<ResourceConfiguration> 
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "configurations")
-    private JsonNode configurations;
+    private String configurations;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;

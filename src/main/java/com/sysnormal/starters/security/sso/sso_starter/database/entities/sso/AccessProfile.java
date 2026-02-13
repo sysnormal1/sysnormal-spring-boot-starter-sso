@@ -10,7 +10,6 @@ import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.JsonNode;
 
 @Getter
 @Setter
@@ -42,7 +41,7 @@ public class AccessProfile extends BaseSsoEntity<AccessProfile> {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "json_data")
-    private JsonNode jsonData;
+    private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;

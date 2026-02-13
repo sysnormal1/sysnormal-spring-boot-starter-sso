@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tools.jackson.databind.JsonNode;
 
 /**
  * agent
@@ -73,7 +72,7 @@ public class Agent extends BaseSsoEntity<Agent> {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "json_data")
-    private JsonNode jsonData;
+    private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;

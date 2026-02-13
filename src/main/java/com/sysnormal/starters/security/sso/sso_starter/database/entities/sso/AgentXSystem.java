@@ -8,7 +8,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.JsonNode;
 
 @Getter
 @Setter
@@ -36,7 +35,7 @@ public class AgentXSystem extends BaseSsoEntity<AgentXSystem> {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "json_data")
-    private JsonNode jsonData;
+    private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;

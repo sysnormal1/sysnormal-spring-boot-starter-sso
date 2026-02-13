@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 
@@ -78,7 +77,7 @@ public class ResourcePermission extends BaseSsoEntity<ResourcePermission> {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "json_data")
-    private JsonNode jsonData;
+    private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;
