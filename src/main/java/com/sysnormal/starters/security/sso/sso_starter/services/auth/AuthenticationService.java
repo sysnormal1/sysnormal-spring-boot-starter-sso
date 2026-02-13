@@ -379,6 +379,9 @@ public class AuthenticationService {
                     if (mailService.isValidEmail(email)) {
                         Optional<Agent> agent = agentsRepository.findByEmail(email.trim().toLowerCase());
                         if (agent.isPresent()) {
+                            agentAuthDto.setAgentId(agent.get().getId());
+                            agentAuthDto.setIdentifierTypeId(agent.get().getIdentifierTypeId());
+                            agentAuthDto.setIdentifier(agent.get().getIdentifier());
                             agentAuthDto.setExpiration(jwtProperties.getDefaultRefreshTokenExpiration());
                             agent.get().setLastPasswordChangeToken(jwtService.createToken(agentAuthDto));
                             agentsRepository.save(agent.get());

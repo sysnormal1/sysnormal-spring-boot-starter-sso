@@ -113,9 +113,14 @@ public class GoogleAuthService {
                         email.trim().toLowerCase()
                 );
                 if (agent.isPresent()) {
+                    agentAuthDto.setAgentId(agent.get().getId());
+                    agentAuthDto.setIdentifierTypeId(agent.get().getIdentifierTypeId());
+                    agentAuthDto.setIdentifierTypeId(agent.get().getIdentifierTypeId());
+                    agentAuthDto.setEmail(email.trim().toLowerCase());
                     result = authenticationService.getAuthDataResult(agentAuthDto, agent, false, null,  true, null);
                 } else {
                     String password = PasswordUtils.generateCompliantPassword(email, securityProperties.getPasswordRules());
+                    agentAuthDto.setIdentifierTypeId(IdentifierType.EMAIL_ID);
                     agentAuthDto.setIdentifier(email);
                     agentAuthDto.setEmail(email);
                     agentAuthDto.setPassword(password);
