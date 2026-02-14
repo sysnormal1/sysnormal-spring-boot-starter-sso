@@ -92,7 +92,7 @@ public class JwtService {
                 result.get("agentId"),
                 result.get("systemId"),
                 result.get("accessProfileId"),
-                (result.getExpiration().getTime() - System.currentTimeMillis()) / 1000
+                result.getExpiration() != null ? (result.getExpiration().getTime() - System.currentTimeMillis()) / 1000 : 0
         );
         return result;
     }
