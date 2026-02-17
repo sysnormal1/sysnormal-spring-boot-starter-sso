@@ -20,6 +20,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -88,7 +89,7 @@ public class SecurityAutoConfiguration {
      *
      * @return the cors configuration
      */
-    @Bean
+    /*@Bean
     //@ConditionalOnMissingBean(name = "corsConfigurationSource")
     @Primary
     public CorsConfigurationSource corsConfigurationSource() {
@@ -104,15 +105,30 @@ public class SecurityAutoConfiguration {
         source.registerCorsConfiguration("/**", config);
         logger.debug("END {}.{}", this.getClass().getSimpleName(), "corsConfigurationSource");
         return source;
+    }*/
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOriginPatterns(List.of("*")); // 🔥 qualquer origem
+        config.setAllowedMethods(List.of("*"));        // GET, POST, PUT, DELETE, etc
+        config.setAllowedHeaders(List.of("*"));        // qualquer header
+        config.setAllowCredentials(true);              // se usar cookies/JWT em header
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
-    @Bean
+    /*@Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsFilter corsFilter(CorsConfigurationSource source) {
         logger.debug("INIT {}.{}", this.getClass().getSimpleName(), "corsFilter");
         logger.debug("END {}.{}", this.getClass().getSimpleName(), "corsFilter");
         return new CorsFilter(source);
-    }
+    }*/
 
 
     /**
@@ -136,8 +152,9 @@ public class SecurityAutoConfiguration {
         try {
             logger.debug("public end points: {}",properties.getPublicEndPoints());
             http
-                    .csrf(csrf -> csrf.disable())
+                    .csrf(AbstractHttpConfigurer::disable)
                     .cors(Customizer.withDefaults()) // enable CORS
+                    //.cors(AbstractHttpConfigurer::withDefaults) //disable cors
                     .exceptionHandling(ex -> ex
                             .authenticationEntryPoint(authenticationEntryPoint)
                             .accessDeniedHandler(accessDeniedHandler)
@@ -147,6 +164,7 @@ public class SecurityAutoConfiguration {
                             .requestMatchers("/error").permitAll()
                             .requestMatchers(properties.getPublicEndPoints().toArray(new String[0])).permitAll()
                             .anyRequest().authenticated()
+                            //.anyRequest().permitAll()
                     )
                     .addFilterAfter(jwtAuthenticationFilter, ExceptionTranslationFilter.class);
 
