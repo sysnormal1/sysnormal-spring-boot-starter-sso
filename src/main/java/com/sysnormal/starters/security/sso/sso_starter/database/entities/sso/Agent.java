@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,8 +68,7 @@ public class Agent extends BaseSsoEntity<Agent> {
     @Column(name = "token_expiration_time")
     private Long tokenExpirationTime;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "json_data")
+    @Column(name = "json_data", length = Integer.MAX_VALUE)
     private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)

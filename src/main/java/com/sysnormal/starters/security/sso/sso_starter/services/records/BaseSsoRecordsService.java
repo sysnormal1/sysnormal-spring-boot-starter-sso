@@ -117,7 +117,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             }
 
             // Converte JSON → Entity concreta
-            E entity = objectMapper.treeToValue(params, entityClass);
+            E entity = objectMapper.convertValue(params, entityClass);
 
             // Persistência
             E saved = repository.save(entity);
@@ -138,7 +138,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             }
 
             // Converte JSON → Entity concreta
-            E entity = objectMapper.treeToValue(params, entityClass);
+            E entity = objectMapper.convertValue(params, entityClass);
             entity.setId(id);
 
             E managed = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
@@ -165,7 +165,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             }
 
             // Converte JSON → Entity concreta
-            E entity = objectMapper.treeToValue(params, entityClass);
+            E entity = objectMapper.convertValue(params, entityClass);
             entity.setId(id);
 
             E managed = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));

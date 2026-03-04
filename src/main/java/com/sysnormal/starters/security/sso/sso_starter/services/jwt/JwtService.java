@@ -6,7 +6,6 @@ import com.sysnormal.libs.utils.TokenUtils;
 import com.sysnormal.starters.security.sso.sso_starter.database.repositories.sso.AgentsRepository;
 import com.sysnormal.starters.security.sso.sso_starter.properties.jwt.JwtProperties;
 import com.sysnormal.starters.security.sso.sso_starter.server.auth.dtos.AgentAuthDto;
-import com.sysnormal.starters.security.sso.sso_starter.server.auth.filters.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -56,6 +55,8 @@ public class JwtService {
         if (agentAuthDto == null) {
             return null;
         }
+
+        /*@TODO - 2026-03-04 - track origin of informations (systemId and accessProfileId) in ascendent calls of this method and set in agentAuthDto if not setted*/
         logger.debug("creating token for agent {}, identifier {}, systemId {}, accessProfileId {}, expiration {}",
                 agentAuthDto.getAgentId(), agentAuthDto.getIdentifier(), agentAuthDto.getSystemId(), agentAuthDto.getAccessProfileId(), agentAuthDto.getExpiration());
 

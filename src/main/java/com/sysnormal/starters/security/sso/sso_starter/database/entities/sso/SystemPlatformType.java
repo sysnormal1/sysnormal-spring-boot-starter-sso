@@ -24,7 +24,7 @@ import org.hibernate.annotations.ColumnDefault;
                 )
         }
 )
-public class SystemPlatform extends BaseSsoEntity<SystemPlatform> {
+public class SystemPlatformType extends BaseSsoEntity<SystemPlatformType> {
 
     @Column(name = "name", nullable = false, length = 127)
     private String name;
@@ -55,21 +55,21 @@ public class SystemPlatform extends BaseSsoEntity<SystemPlatform> {
     public static final long WEB_ID = 2;
     public static final long MOBILE_ID = 3;
 
-    public static final SystemPlatform DESKTOP = new SystemPlatform(){{
+    public static final SystemPlatformType DESKTOP = new SystemPlatformType(){{
         setId(DESKTOP_ID);
         setIsSysRec((byte) 1);
         setName("DESKTOP");
         setIsDesktop((byte) 1);
     }};
 
-    public static final SystemPlatform WEB = new SystemPlatform(){{
+    public static final SystemPlatformType WEB = new SystemPlatformType(){{
         setId(WEB_ID);
         setIsSysRec((byte) 1);
         setName("WEB");
         setIsWeb((byte) 1);
     }};
 
-    public static final SystemPlatform MOBILE = new SystemPlatform(){{
+    public static final SystemPlatformType MOBILE = new SystemPlatformType(){{
         setId(MOBILE_ID);
         setIsSysRec((byte) 1);
         setName("MOBILE");

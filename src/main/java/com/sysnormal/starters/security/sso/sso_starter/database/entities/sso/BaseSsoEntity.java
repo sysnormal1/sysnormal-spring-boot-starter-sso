@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * base entity of sso
@@ -14,6 +17,7 @@ import org.hibernate.annotations.ColumnDefault;
  * @version 1.0.0
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 public abstract class BaseSsoEntity<T extends BaseSsoEntity<T>>  extends BaseCommonEntityWithParent<T> {
@@ -22,11 +26,13 @@ public abstract class BaseSsoEntity<T extends BaseSsoEntity<T>>  extends BaseCom
     @ColumnDefault(RecordStatus.ACTIVE_ID+"")
     private Long recordStatusId = RecordStatus.ACTIVE_ID;
 
-    @Column(name = "creator_agent_id", nullable = false)
+    @CreatedBy
+    @Column(name = "creator_agent_id", nullable = false, updatable = false)
     @ColumnDefault(Agent.SYSTEM_ID+"")
     private Long creatorAgentId = Agent.SYSTEM_ID;
 
-    @Column(name = "updater_agent_id")
+    @LastModifiedBy()
+    @Column(name = "updater_agent_id", insertable = false)
     private Long updaterAgentId;
 
     @ManyToOne(fetch = FetchType.LAZY)

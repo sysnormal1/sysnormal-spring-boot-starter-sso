@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -38,8 +36,7 @@ public class System extends BaseSsoEntity<System> {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "json_data")
+    @Column(name = "json_data", length = Integer.MAX_VALUE)
     private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
@@ -49,7 +46,7 @@ public class System extends BaseSsoEntity<System> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "system_platform_id", insertable = false, updatable = false)
     @JsonIgnore
-    private SystemPlatform systemPlatform;
+    private SystemPlatformType systemPlatformType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "system_side_id", insertable = false, updatable = false)
@@ -63,7 +60,7 @@ public class System extends BaseSsoEntity<System> {
         setId(SSO_SERVER_ID);
         setIsSysRec((byte) 1);
         setName("SSO SERVER");
-        setSystemPlatformId(SystemPlatform.DESKTOP_ID);
+        setSystemPlatformId(SystemPlatformType.DESKTOP_ID);
         setSystemSideId(SystemSide.SERVER_SIDE_ID);
     }};
 
@@ -71,9 +68,10 @@ public class System extends BaseSsoEntity<System> {
         setId(SSO_WEBCLIENT_ID);
         setIsSysRec((byte) 1);
         setName("SSO WEBCLIENT");
-        setSystemPlatformId(SystemPlatform.WEB_ID);
+        setSystemPlatformId(SystemPlatformType.WEB_ID);
         setSystemSideId(SystemSide.CLIENT_SIDE_ID);
     }};
+
 
 
 

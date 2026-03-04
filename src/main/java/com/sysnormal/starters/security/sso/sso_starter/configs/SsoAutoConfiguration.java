@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Import;
         MailAutoConfiguration.class,
         ServerAutoConfiguration.class,
         GoogleAuthAutoConfiguration.class,
-        HelpersAutoConfiguration.class
+        HelpersAutoConfiguration.class,
+        JpaAuditingConfiguration.class
 })
 public class SsoAutoConfiguration {
 }

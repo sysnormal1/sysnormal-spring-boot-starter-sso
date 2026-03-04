@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -38,8 +36,7 @@ public class ResourceConfiguration extends BaseSsoEntity<ResourceConfiguration> 
     @Column(name = "agent_id")
     private Long agentId;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "configurations")
+    @Column(name = "configurations", length = Integer.MAX_VALUE)
     private String configurations;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)

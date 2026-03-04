@@ -111,33 +111,33 @@ public class V2__Seeder extends BaseJavaMigration {
             //SYSTEM_PLATFORMS
             fieldsNames = new String[]{"id", "is_sys_rec", "name", "is_desktop", "is_web", "is_mobile"};
             valuesBinders = new String[]{"?", "?", "?", "?", "?", "?"};
-            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(SystemPlatform.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(SystemPlatformType.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemPlatform.DESKTOP_ID);
-                ps.setByte(2, SystemPlatform.DESKTOP.getIsSysRec());
-                ps.setString(3, SystemPlatform.DESKTOP.getName());
-                ps.setByte(4, SystemPlatform.DESKTOP.getIsDesktop());
-                ps.setByte(5, SystemPlatform.DESKTOP.getIsWeb());
-                ps.setByte(6, SystemPlatform.DESKTOP.getIsMobile());
+                ps.setLong(1, SystemPlatformType.DESKTOP_ID);
+                ps.setByte(2, SystemPlatformType.DESKTOP.getIsSysRec());
+                ps.setString(3, SystemPlatformType.DESKTOP.getName());
+                ps.setByte(4, SystemPlatformType.DESKTOP.getIsDesktop());
+                ps.setByte(5, SystemPlatformType.DESKTOP.getIsWeb());
+                ps.setByte(6, SystemPlatformType.DESKTOP.getIsMobile());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemPlatform.WEB_ID);
-                ps.setByte(2, SystemPlatform.WEB.getIsSysRec());
-                ps.setString(3, SystemPlatform.WEB.getName());
-                ps.setByte(4, SystemPlatform.WEB.getIsDesktop());
-                ps.setByte(5, SystemPlatform.WEB.getIsWeb());
-                ps.setByte(6, SystemPlatform.WEB.getIsMobile());
+                ps.setLong(1, SystemPlatformType.WEB_ID);
+                ps.setByte(2, SystemPlatformType.WEB.getIsSysRec());
+                ps.setString(3, SystemPlatformType.WEB.getName());
+                ps.setByte(4, SystemPlatformType.WEB.getIsDesktop());
+                ps.setByte(5, SystemPlatformType.WEB.getIsWeb());
+                ps.setByte(6, SystemPlatformType.WEB.getIsMobile());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemPlatform.MOBILE_ID);
-                ps.setByte(2, SystemPlatform.MOBILE.getIsSysRec());
-                ps.setString(3, SystemPlatform.MOBILE.getName());
-                ps.setByte(4, SystemPlatform.MOBILE.getIsDesktop());
-                ps.setByte(5, SystemPlatform.MOBILE.getIsWeb());
-                ps.setByte(6, SystemPlatform.MOBILE.getIsMobile());
+                ps.setLong(1, SystemPlatformType.MOBILE_ID);
+                ps.setByte(2, SystemPlatformType.MOBILE.getIsSysRec());
+                ps.setString(3, SystemPlatformType.MOBILE.getName());
+                ps.setByte(4, SystemPlatformType.MOBILE.getIsDesktop());
+                ps.setByte(5, SystemPlatformType.MOBILE.getIsWeb());
+                ps.setByte(6, SystemPlatformType.MOBILE.getIsMobile());
                 ps.executeUpdate();
             }
 
@@ -185,7 +185,6 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setString(5, System.SSO_WEBCLIENT.getName());
                 ps.executeUpdate();
             }
-
 
             //RESOURCE_TYPES
             fieldsNames = new String[]{"id", "is_sys_rec", "name"};
@@ -270,6 +269,8 @@ public class V2__Seeder extends BaseJavaMigration {
             valuesBinders = new String[]{"?", "?", "?","?", "?", "?","?", "?", "?"};
             query = "insert ignore into " + JpaReflectionUtils.resolveTableName(Resource.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
+
+            //SSO WEBCLIENT RESOURCES
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
                 ps.setLong(1, Resource.SYSTEMS_ID);
                 ps.setByte(2, Resource.SYSTEMS.getIsSysRec());
@@ -378,6 +379,8 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setInt(9, Resource.AGENTS_X_SYSTEMS.getNumericOrder());
                 ps.executeUpdate();
             }
+
+
 
 
             //ACCESS_PROFILES

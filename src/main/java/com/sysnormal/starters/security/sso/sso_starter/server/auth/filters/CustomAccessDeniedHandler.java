@@ -3,7 +3,6 @@ package com.sysnormal.starters.security.sso.sso_starter.server.auth.filters;
 import com.sysnormal.libs.commons.DefaultDataSwap;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import tools.jackson.databind.ObjectMapper;

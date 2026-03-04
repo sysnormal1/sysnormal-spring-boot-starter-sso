@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -75,8 +74,7 @@ public class ResourcePermission extends BaseSsoEntity<ResourcePermission> {
     @Column(name = "condition", length = Integer.MAX_VALUE)
     private String condition;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "json_data")
+    @Column(name = "json_data", length = Integer.MAX_VALUE)
     private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)

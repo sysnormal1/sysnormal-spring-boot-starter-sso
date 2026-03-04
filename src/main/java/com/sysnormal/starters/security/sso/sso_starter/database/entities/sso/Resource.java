@@ -2,11 +2,12 @@ package com.sysnormal.starters.security.sso.sso_starter.database.entities.sso;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.*;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Check;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -56,8 +57,7 @@ public class Resource extends BaseSsoEntity<Resource> {
     @Check(constraints = "show_in_menu in (0,1)")
     private byte showInMenu = 1;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "json_data")
+    @Column(name = "json_data", length = Integer.MAX_VALUE)
     private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)

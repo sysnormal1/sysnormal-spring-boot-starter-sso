@@ -87,6 +87,9 @@ public class AuthenticationService {
         logger.debug("INIT {}.{}",this.getClass().getSimpleName(),"getAuthDataResult");
         DefaultDataSwap result = new DefaultDataSwap();
         if (optionalAgent.isPresent()) {
+            if (agentAuthDto.getAgentId() == null) {
+                agentAuthDto.setAgentId(optionalAgent.get().getId());
+            }
             if (!checkPassword || (checkPassword && encoder.matches(agentAuthDto.getPassword(), optionalAgent.get().getPassword()))) {
                 if (optionalAgent.get().getDeletedAt() == null && Objects.equals(RecordStatus.ACTIVE_ID,optionalAgent.get().getRecordStatusId())) {
 

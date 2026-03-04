@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -33,8 +31,7 @@ public class AccessProfileXSystem extends BaseSsoEntity<AccessProfileXSystem> {
     @Column(name = "system_id", nullable = false)
     private Long systemId;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "json_data")
+    @Column(name = "json_data", length = Integer.MAX_VALUE)
     private String jsonData;
 
     @Column(name = "notes", length = Integer.MAX_VALUE)
