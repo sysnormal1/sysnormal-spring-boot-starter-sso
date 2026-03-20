@@ -1,0 +1,28 @@
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.configs;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+/**
+ * SsoAutoConfiguration
+ *
+ * @author aalencarvz1
+ * @version 1.0.0
+ *
+ *
+ */
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(name = "org.springframework.boot.SpringApplication")
+@Import({
+        DatabaseAutoConfiguration.class,
+        FlywayAfterHibernate.class,
+        SecurityAutoConfiguration.class,
+        MailAutoConfiguration.class,
+        ServerAutoConfiguration.class,
+        GoogleAuthAutoConfiguration.class,
+        HelpersAutoConfiguration.class,
+        JpaAuditingConfiguration.class
+})
+public class SsoAutoConfiguration {
+}

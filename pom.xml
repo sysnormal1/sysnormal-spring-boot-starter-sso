@@ -5,15 +5,15 @@
 
 	<!--<groupId>com.sysnormal.security.auth.sso.starter</groupId>-->
 	<groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
-	<artifactId>sysnormal-spring-boot-sso-starter</artifactId>
+	<artifactId>sysnormal-spring-boot-starter-sso</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sysnormal-spring-boot-sso-starter</name>
+	<name>sysnormal-spring-boot-starter-sso</name>
 	<description>Spring Boot Starter sso</description>
-	<url>https://github.com/sysnormal1/sysnormal-spring-boot-sso-starter</url>
+	<url>https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso</url>
 
 	<organization>
 		<name>SYSNORMAL</name>
-		<url>https://github.com/sysnormal1/sysnormal-spring-boot-sso-starter</url>
+		<url>https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso</url>
 	</organization>
 
 	<licenses>
@@ -24,9 +24,9 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/sysnormal1/sysnormal-spring-boot-sso-starter</url>
-		<connection>scm:git:git://github.com/sysnormal1/sysnormal-spring-boot-sso-starter.git</connection>
-		<developerConnection>scm:git:ssh://github.com/sysnormal1/sysnormal-spring-boot-sso-starter.git</developerConnection>
+		<url>https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso</url>
+		<connection>scm:git:git://github.com/sysnormal1/sysnormal-spring-boot-starter-sso.git</connection>
+		<developerConnection>scm:git:ssh://github.com/sysnormal1/sysnormal-spring-boot-starter-sso.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
