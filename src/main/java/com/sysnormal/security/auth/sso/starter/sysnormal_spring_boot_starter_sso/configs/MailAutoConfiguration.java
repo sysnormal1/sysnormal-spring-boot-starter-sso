@@ -23,7 +23,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @EnableConfigurationProperties(MailProperties.class)
 @ConditionalOnProperty(prefix = "spring.mail", name = "enabled", havingValue = "true", matchIfMissing = true)
 @Import(org.springframework.boot.mail.autoconfigure.MailSenderAutoConfiguration.class)
-@ComponentScan(basePackages = "com.sysnormal.starters.security.sso.sso_starter.services.mail")
+@ComponentScan(basePackages = "com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.mail")
 public class MailAutoConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(MailAutoConfiguration.class);

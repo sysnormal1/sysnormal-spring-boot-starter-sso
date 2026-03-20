@@ -26,8 +26,8 @@ import org.springframework.context.annotation.Configuration;
 //@ConditionalOnClass({TomcatServletWebServerFactory.class})
 @EnableConfigurationProperties(ServerProperties.class)
 @ComponentScan(basePackages = {
-        "com.sysnormal.starters.security.sso.sso_starter.server",
-        "com.sysnormal.starters.security.sso.sso_starter.services"
+        "com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.server",
+        "com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services"
 })
 public class ServerAutoConfiguration {
 

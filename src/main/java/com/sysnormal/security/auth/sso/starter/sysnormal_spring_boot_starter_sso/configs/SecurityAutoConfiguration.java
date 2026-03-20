@@ -1,10 +1,10 @@
 package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.configs;
 
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.security.SecurityProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.server.auth.filters.CustomAccessDeniedHandler;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.server.auth.filters.CustomAuthenticationEntryPoint;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.server.auth.filters.JwtAuthenticationFilter;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.auth.RequestLoggingFilter;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.jwt.JwtSsoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = "spring.security", name = "enabled", havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties(SecurityProperties.class)
+@EnableConfigurationProperties({SecurityProperties.class, JwtProperties.class})
 public class SecurityAutoConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityAutoConfiguration.class);
@@ -56,6 +56,12 @@ public class SecurityAutoConfiguration {
         logger.debug("INIT {}.{}", this.getClass().getSimpleName(), "SecurityAutoConfiguration");
         this.properties = properties;
         logger.debug("END {}.{}", this.getClass().getSimpleName(), "SecurityAutoConfiguration");
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public JwtSsoService jwtSsoService(JwtProperties jwtProperties) {
+        return new JwtSsoService(jwtProperties);
     }
 
     @Bean
@@ -136,7 +142,6 @@ public class SecurityAutoConfiguration {
     @ConditionalOnMissingBean(name = "ssoFilterChain")
     public SecurityFilterChain ssoFilterChain(
             HttpSecurity http,
-            RequestLoggingFilter requestLoggingFilter,
             JwtAuthenticationFilter jwtAuthenticationFilter,
             AuthenticationEntryPoint authenticationEntryPoint,
             AccessDeniedHandler accessDeniedHandler

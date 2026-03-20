@@ -1,9 +1,9 @@
 package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.jwt;
 
 import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtProperties;
 import com.sysnormal.security.core.security_core.services.jwt.JwtCoreService;
 import com.sysnormal.security.core.security_core.utils.KeyUtils;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtProperties;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
