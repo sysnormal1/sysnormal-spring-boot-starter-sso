@@ -1,10 +1,10 @@
-package com.sysnormal.security.auth.sso.starter.configs;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.configs;
 
 import com.sysnormal.commons.core.utils_core.Constants;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Agent;
-import com.sysnormal.security.auth.sso.starter.database.repositories.sso.AgentsRepository;
-import com.sysnormal.security.auth.sso.starter.properties.database.DatabaseProperties;
-import com.sysnormal.security.auth.sso.starter.properties.spring.SpringProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Agent;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso.AgentsRepository;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.database.DatabaseProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.spring.SpringProperties;
 import jakarta.persistence.EntityManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

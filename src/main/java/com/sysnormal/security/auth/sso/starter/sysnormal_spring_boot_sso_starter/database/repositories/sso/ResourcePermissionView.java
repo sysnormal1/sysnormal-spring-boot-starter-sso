@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.database.repositories.sso;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso;
 
 public record ResourcePermissionView(
         Long resourceSystemId,

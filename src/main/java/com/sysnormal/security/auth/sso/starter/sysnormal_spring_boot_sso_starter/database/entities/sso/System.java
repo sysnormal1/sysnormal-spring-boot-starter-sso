@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.database.entities.sso;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

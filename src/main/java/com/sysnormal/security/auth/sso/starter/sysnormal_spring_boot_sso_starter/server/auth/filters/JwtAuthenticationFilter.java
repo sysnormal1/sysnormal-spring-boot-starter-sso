@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.server.auth.filters;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.auth.filters;
 
-import com.sysnormal.security.auth.sso.starter.properties.security.SecurityProperties;
-import com.sysnormal.security.auth.sso.starter.services.jwt.JwtSsoService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.security.SecurityProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.jwt.JwtSsoService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

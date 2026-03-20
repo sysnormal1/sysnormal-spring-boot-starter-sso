@@ -1,6 +1,6 @@
-package com.sysnormal.security.auth.sso.starter.database.audit;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.audit;
 
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Agent;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Agent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.AuditorAware;

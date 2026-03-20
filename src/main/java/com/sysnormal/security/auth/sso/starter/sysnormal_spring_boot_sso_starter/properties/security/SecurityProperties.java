@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.properties.security;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.security;
 
 import lombok.Getter;
 import lombok.Setter;

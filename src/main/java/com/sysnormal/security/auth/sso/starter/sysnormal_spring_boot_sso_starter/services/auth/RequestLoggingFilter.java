@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.services.auth;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

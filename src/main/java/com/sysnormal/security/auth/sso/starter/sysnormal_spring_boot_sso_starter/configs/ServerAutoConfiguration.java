@@ -1,6 +1,6 @@
-package com.sysnormal.security.auth.sso.starter.configs;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.configs;
 
-import com.sysnormal.security.auth.sso.starter.properties.server.ServerProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.server.ServerProperties;
 import org.apache.catalina.connector.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

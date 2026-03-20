@@ -1,11 +1,11 @@
-package com.sysnormal.security.auth.sso.starter.services.records.resources;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.resources;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.core.utils_core.JsonUtils;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Resource;
-import com.sysnormal.security.auth.sso.starter.database.repositories.sso.ResourcesRepository;
-import com.sysnormal.security.auth.sso.starter.services.auth.AuthenticationService;
-import com.sysnormal.security.auth.sso.starter.services.records.BaseSsoRecordsService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Resource;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso.ResourcesRepository;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth.AuthenticationService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.BaseSsoRecordsService;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

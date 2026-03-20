@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.services.auth;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sysnormal.commons.core.DefaultDataSwap;
@@ -6,13 +6,13 @@ import com.sysnormal.commons.spring.spring_data_utils.DatabaseUtils;
 import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
 import com.sysnormal.security.auth.auth_core.dtos.RefreshTokenRequestDTO;
 import com.sysnormal.security.auth.auth_core.dtos.TokenRequestDTO;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.*;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.System;
-import com.sysnormal.security.auth.sso.starter.database.repositories.sso.*;
-import com.sysnormal.security.auth.sso.starter.properties.jwt.JwtProperties;
-import com.sysnormal.security.auth.sso.starter.properties.security.SecurityProperties;
-import com.sysnormal.security.auth.sso.starter.services.jwt.JwtSsoService;
-import com.sysnormal.security.auth.sso.starter.services.mail.MailService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.*;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.System;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso.*;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.jwt.JwtProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.security.SecurityProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.jwt.JwtSsoService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.mail.MailService;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

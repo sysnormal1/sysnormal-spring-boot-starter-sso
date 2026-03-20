@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.properties.mail;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.mail;
 
 import lombok.Getter;
 import lombok.Setter;

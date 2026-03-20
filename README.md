@@ -1,4 +1,17 @@
-# SSO Starter
+# Sysnormal Spring Boot SSO Starter
+
+![Version](https://img.shields.io/badge/maven--central-0.0.1--SNAPSHOT-orange)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x+-brightgreen)
+![Spring Web](https://img.shields.io/badge/Spring-Web-orange)
+![Spring WebFlux](https://img.shields.io/badge/Spring-WebFlux-orange)
+![Jakarta](https://img.shields.io/badge/Jakarta-EE-orange)
+![JPA](https://img.shields.io/badge/JPA-API-blue)
+![Hibernate](https://img.shields.io/badge/Hibernate-ORM-59666C)
+![Lombok](https://img.shields.io/badge/Lombok-annotations-pink)
+![Jackson](https://img.shields.io/badge/Jackson-JSON-blue)
+![Reflections](https://img.shields.io/badge/Reflections-runtime--scanning-lightgrey)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 
 **SSO Starter** is a modular Java library built with **Spring Boot** that provides a complete infrastructure for **Single Sign-On (SSO)** authentication.  
 It enables centralized authentication across multiple applications with minimal setup, following Spring Boot's auto-configuration principles.
@@ -29,7 +42,7 @@ Add the dependency below to your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>com.sysnormal.starters.security.sso</groupId>
+    <groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
     <artifactId>sso-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
@@ -88,24 +101,6 @@ The **sso-starter** library uses `@ConditionalOnMissingBean` and `@EnableConfigu
 - Override configurations via `application.yml`
 - Replace default beans such as `MailService`, `AuthenticationService`, or `SecurityProperties`
 - Extend core logic with your own implementations
-
-### 🧩 Example — Overriding a Bean
-
-```java
-@Service
-@Primary
-public class CustomAuthenticationService extends AuthenticationService {
-
-    @Override
-    public AuthResponse authenticate(LoginRequest request) {
-        // Custom authentication logic
-        System.out.println("Running custom authentication flow");
-        return super.authenticate(request);
-    }
-}
-```
-
-This allows your project to modify or extend the SSO Starter’s behavior without changing its source code.
 
 ---
 
@@ -236,7 +231,7 @@ The google and github oauth2 work equals:
 To get started locally:
 
 ```bash
-git clone https://github.com/sysnormal1/java-sso-starter.git
+git clone https://github.com/sysnormal1/sysnormal-spring-boot-sso-starter.git
 cd sso-starter
 mvn install
 ```
@@ -261,6 +256,10 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 GitHub: [@aalencarvz1](https://github.com/aalencarvz1)
 
 ---
+## 👤 Organization
 
-> 🔗 Published on [Maven Central (Sonatype)](https://central.sonatype.com/artifact/com.sysnormal.starters.security.sso/sso-starter)
+**Sysnormal**  
+GitHub: [@sysnormal1](https://github.com/sysnormal1)
+
+---
 

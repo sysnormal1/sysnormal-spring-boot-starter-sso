@@ -1,10 +1,10 @@
-package com.sysnormal.security.auth.sso.starter.services.records;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.spring.spring_data_utils.DatabaseUtils;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.BaseSsoEntity;
-import com.sysnormal.security.auth.sso.starter.database.projections.IdAndNameProjection;
-import com.sysnormal.security.auth.sso.starter.database.repositories.sso.BaseSsoRepository;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.BaseSsoEntity;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.projections.IdAndNameProjection;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso.BaseSsoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

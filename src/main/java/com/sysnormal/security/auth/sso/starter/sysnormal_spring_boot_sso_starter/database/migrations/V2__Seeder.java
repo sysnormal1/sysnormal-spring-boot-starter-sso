@@ -1,8 +1,9 @@
-package com.sysnormal.security.auth.sso.starter.database.migrations;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.migrations;
 
 import com.sysnormal.commons.spring.spring_data_utils.JpaReflectionUtils;
 import com.sysnormal.security.auth.sso.starter.database.entities.sso.*;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.System;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.*;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.System;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;

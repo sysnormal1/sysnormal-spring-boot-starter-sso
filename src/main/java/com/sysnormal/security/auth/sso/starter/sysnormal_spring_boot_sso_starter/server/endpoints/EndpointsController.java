@@ -1,8 +1,8 @@
-package com.sysnormal.security.auth.sso.starter.server.endpoints;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.endpoints;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.spring.spring_web_utils.response.ResponseUtils;
-import com.sysnormal.security.auth.sso.starter.services.endpoints.EndpointsService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.endpoints.EndpointsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

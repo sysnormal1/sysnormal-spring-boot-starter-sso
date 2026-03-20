@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.server.records.identifierTypes;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.records.identifierTypes;
 
-import com.sysnormal.security.auth.sso.starter.server.records.BaseRecordsController;
-import com.sysnormal.security.auth.sso.starter.services.records.identifierTypes.IdentifierTypesService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.records.BaseRecordsController;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.identifierTypes.IdentifierTypesService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

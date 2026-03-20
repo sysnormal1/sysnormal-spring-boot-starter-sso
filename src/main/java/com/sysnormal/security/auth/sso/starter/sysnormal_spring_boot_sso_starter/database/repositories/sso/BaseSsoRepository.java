@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.database.repositories.sso;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso;
 
 import com.sysnormal.data.base_data_model.repositories.BaseCommonRepository;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.BaseSsoEntity;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.BaseSsoEntity;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;

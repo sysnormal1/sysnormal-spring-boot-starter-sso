@@ -1,9 +1,9 @@
-package com.sysnormal.security.auth.sso.starter.server.records.resourcePermissions;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.records.resourcePermissions;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.spring.spring_web_utils.response.ResponseUtils;
-import com.sysnormal.security.auth.sso.starter.server.records.BaseRecordsController;
-import com.sysnormal.security.auth.sso.starter.services.records.resourcePermissions.ResourcePermissionsService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.records.BaseRecordsController;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.resourcePermissions.ResourcePermissionsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

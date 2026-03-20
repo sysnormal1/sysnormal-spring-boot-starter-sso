@@ -1,6 +1,6 @@
-package com.sysnormal.security.auth.sso.starter.configs;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.configs;
 
-import com.sysnormal.security.auth.sso.starter.properties.mail.MailProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.mail.MailProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

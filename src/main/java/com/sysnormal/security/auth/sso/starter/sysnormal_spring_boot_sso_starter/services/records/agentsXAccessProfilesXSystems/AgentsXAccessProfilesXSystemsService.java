@@ -1,8 +1,8 @@
-package com.sysnormal.security.auth.sso.starter.services.records.agentsXAccessProfilesXSystems;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.agentsXAccessProfilesXSystems;
 
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.AgentXAccessProfileXSystem;
-import com.sysnormal.security.auth.sso.starter.database.repositories.sso.AgentsXAccessProfilesXSystemsRepository;
-import com.sysnormal.security.auth.sso.starter.services.records.BaseSsoRecordsService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.AgentXAccessProfileXSystem;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso.AgentsXAccessProfilesXSystemsRepository;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.BaseSsoRecordsService;
 import org.springframework.stereotype.Service;
 
 @Service

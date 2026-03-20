@@ -1,15 +1,15 @@
-package com.sysnormal.security.auth.sso.starter.services.auth.github;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth.github;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.core.utils_core.HttpUtils;
 import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Agent;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.IdentifierType;
-import com.sysnormal.security.auth.sso.starter.database.repositories.sso.AgentsRepository;
-import com.sysnormal.security.auth.sso.starter.helpers.security.PasswordUtils;
-import com.sysnormal.security.auth.sso.starter.properties.auth.github.GitHubAuthProperties;
-import com.sysnormal.security.auth.sso.starter.properties.security.SecurityProperties;
-import com.sysnormal.security.auth.sso.starter.services.auth.AuthenticationService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Agent;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.IdentifierType;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso.AgentsRepository;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.helpers.security.PasswordUtils;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.auth.github.GitHubAuthProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.security.SecurityProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

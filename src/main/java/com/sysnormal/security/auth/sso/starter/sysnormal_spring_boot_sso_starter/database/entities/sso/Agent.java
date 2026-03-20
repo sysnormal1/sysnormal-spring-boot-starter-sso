@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.database.entities.sso;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sysnormal.security.auth.sso.starter.configs.AppInitializer;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.configs.AppInitializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.server;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import jakarta.servlet.RequestDispatcher;

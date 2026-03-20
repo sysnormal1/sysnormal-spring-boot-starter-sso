@@ -1,6 +1,6 @@
-package com.sysnormal.security.auth.sso.starter.configs;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.configs;
 
-import com.sysnormal.security.auth.sso.starter.database.audit.AuditorAwareImpl;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.audit.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

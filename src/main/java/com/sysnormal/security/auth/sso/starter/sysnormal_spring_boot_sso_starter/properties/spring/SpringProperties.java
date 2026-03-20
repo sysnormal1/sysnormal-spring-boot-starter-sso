@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.properties.spring;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.spring;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class SpringProperties {
     @Setter
     public static class Flyway {
         private boolean enabled = false;
-        private String[] locations = {"com/sysnormal/security/auth/sso/starter/database/migrations"};
+        private String[] locations = {"com/sysnormal/security/auth/sso/starter/sysnormal_spring_boot_sso_starter/database/migrations"};
         private boolean baselineOnMigrate = true;
 
 
@@ -36,7 +36,7 @@ public class SpringProperties {
          */
         public void setLocations(String[] locations) {
             // Define the default location
-            String defaultLocation = "com/sysnormal/security/auth/sso/starter/database/migrations";
+            String defaultLocation = "com/sysnormal/security/auth/sso/starter/sysnormal_spring_boot_sso_starter/database/migrations";
 
             // Se o usuário não passou nada, mantém o padrão
             if (locations == null || locations.length == 0) {

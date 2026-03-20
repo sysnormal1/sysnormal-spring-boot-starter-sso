@@ -1,11 +1,11 @@
-package com.sysnormal.security.auth.sso.starter.server.auth;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.auth;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.spring.spring_web_utils.response.ResponseUtils;
 import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
 import com.sysnormal.security.auth.auth_core.dtos.RefreshTokenRequestDTO;
 import com.sysnormal.security.auth.auth_core.dtos.TokenRequestDTO;
-import com.sysnormal.security.auth.sso.starter.services.auth.AuthenticationService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

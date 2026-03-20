@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.database.migrations;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.migrations;
 
 import com.sysnormal.commons.spring.spring_data_utils.migration.mysql.MySqlMigrationCreateAllTablesAndConstraints;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Agent;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Agent;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 import org.slf4j.Logger;

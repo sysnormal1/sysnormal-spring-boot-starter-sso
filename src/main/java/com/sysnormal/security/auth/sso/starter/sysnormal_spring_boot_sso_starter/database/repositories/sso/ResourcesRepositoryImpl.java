@@ -1,8 +1,8 @@
-package com.sysnormal.security.auth.sso.starter.database.repositories.sso;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso;
 
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.AgentXAccessProfileXSystem;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Resource;
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.ResourcePermission;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.AgentXAccessProfileXSystem;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Resource;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.ResourcePermission;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;

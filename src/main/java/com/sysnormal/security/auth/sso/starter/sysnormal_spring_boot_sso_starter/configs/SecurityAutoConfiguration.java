@@ -1,11 +1,11 @@
-package com.sysnormal.security.auth.sso.starter.configs;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.configs;
 
-import com.sysnormal.security.auth.sso.starter.properties.security.SecurityProperties;
-import com.sysnormal.security.auth.sso.starter.server.auth.filters.CustomAccessDeniedHandler;
-import com.sysnormal.security.auth.sso.starter.server.auth.filters.CustomAuthenticationEntryPoint;
-import com.sysnormal.security.auth.sso.starter.server.auth.filters.JwtAuthenticationFilter;
-import com.sysnormal.security.auth.sso.starter.services.auth.RequestLoggingFilter;
-import com.sysnormal.security.auth.sso.starter.services.jwt.JwtSsoService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.security.SecurityProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.auth.filters.CustomAccessDeniedHandler;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.auth.filters.CustomAuthenticationEntryPoint;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.auth.filters.JwtAuthenticationFilter;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.auth.RequestLoggingFilter;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.jwt.JwtSsoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

@@ -1,6 +1,6 @@
-package com.sysnormal.security.auth.sso.starter.services.mail;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.mail;
 
-import com.sysnormal.security.auth.sso.starter.properties.mail.MailProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.mail.MailProperties;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

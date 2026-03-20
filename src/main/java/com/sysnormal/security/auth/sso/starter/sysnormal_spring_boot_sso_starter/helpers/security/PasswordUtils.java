@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.helpers.security;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.helpers.security;
 
 import com.sysnormal.security.core.security_core.utils.CryptUtils;
-import com.sysnormal.security.auth.sso.starter.properties.security.SecurityProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.properties.security.SecurityProperties;
 
 import java.util.ArrayList;
 import java.util.Collections;

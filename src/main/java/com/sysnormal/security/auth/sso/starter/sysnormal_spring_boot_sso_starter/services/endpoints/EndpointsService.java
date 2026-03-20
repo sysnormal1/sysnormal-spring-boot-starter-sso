@@ -1,4 +1,4 @@
-package com.sysnormal.security.auth.sso.starter.services.endpoints;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.endpoints;
 
 import com.sysnormal.commons.core.DefaultDataSwap;
 import org.slf4j.Logger;

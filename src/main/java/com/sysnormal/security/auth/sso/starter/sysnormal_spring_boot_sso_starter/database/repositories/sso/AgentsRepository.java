@@ -1,6 +1,6 @@
-package com.sysnormal.security.auth.sso.starter.database.repositories.sso;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.repositories.sso;
 
-import com.sysnormal.security.auth.sso.starter.database.entities.sso.Agent;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.database.entities.sso.Agent;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

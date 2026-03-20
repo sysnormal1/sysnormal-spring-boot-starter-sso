@@ -1,7 +1,7 @@
-package com.sysnormal.security.auth.sso.starter.server.records.systemSides;
+package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.records.systemSides;
 
-import com.sysnormal.security.auth.sso.starter.server.records.BaseRecordsController;
-import com.sysnormal.security.auth.sso.starter.services.records.systemSides.SystemSidesService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.server.records.BaseRecordsController;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_sso_starter.services.records.systemSides.SystemSidesService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
