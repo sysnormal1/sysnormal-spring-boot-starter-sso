@@ -2,6 +2,7 @@ package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_ss
 
 import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso_client_protector.services.jwt.JwtService;
 import com.sysnormal.security.core.security_core.services.jwt.JwtCoreService;
 import com.sysnormal.security.core.security_core.utils.KeyUtils;
 import io.jsonwebtoken.JwtBuilder;
@@ -23,30 +24,22 @@ import java.util.Date;
  * @author aalencarvz1
  * @version 1.0.0
  */
-@Service
+//@Service //dont anotate @component in starter
 @EnableConfigurationProperties(JwtProperties.class)
-public class JwtSsoService extends JwtCoreService {
+public class JwtSsoService extends JwtService {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtSsoService.class);
 
     private final JwtProperties jwtProperties;
     private final String privatePem;
-    private final String publicPem;
     private final PrivateKey privateKey;
-    private final PublicKey publicKey;
-
-
 
     public JwtSsoService(JwtProperties jwtProperties) {
-        super();
+        super(jwtProperties);
         this.jwtProperties = jwtProperties;
-
         try {
             this.privatePem = Files.readString(Path.of(jwtProperties.getPrivateKeyPath()));
-            this.publicPem = Files.readString(Path.of(jwtProperties.getPublicKeyPath()));
             this.privateKey = KeyUtils.parseRsaPrivateKey(privatePem);
-            this.publicKey = KeyUtils.parseRsaPublicKey(publicPem);
-            buildJwtParser(this.publicKey);
         } catch (Exception e) {
             throw new IllegalStateException("Error", e);
         }

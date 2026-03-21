@@ -49,9 +49,8 @@ public class AuthenticationService {
 
     private final JwtProperties jwtProperties;
 
-
-    @Autowired
-    JwtSsoService jwtSsoService;
+    /*@Autowired*/
+    private final JwtSsoService jwtSsoService;
 
     @Autowired
     SystemsRepository systemsRepository;
@@ -77,9 +76,14 @@ public class AuthenticationService {
 
     private static final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public AuthenticationService(SecurityProperties properties,  JwtProperties jwtProperties) {
+    public AuthenticationService(
+            SecurityProperties properties,
+            JwtProperties jwtProperties,
+            JwtSsoService jwtSsoService
+    ) {
         this.properties = properties;
         this.jwtProperties = jwtProperties;
+        this.jwtSsoService = jwtSsoService;
     }
 
 

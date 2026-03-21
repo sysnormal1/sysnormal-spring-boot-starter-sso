@@ -17,11 +17,11 @@ import org.springframework.context.annotation.Import;
 @Import({
         DatabaseAutoConfiguration.class,
         FlywayAfterHibernate.class,
-        SecurityAutoConfiguration.class,
+        //SecurityAutoConfiguration.class, //migrated do client-protector
+        JwtAutoConfiguration.class,
         MailAutoConfiguration.class,
         ServerAutoConfiguration.class,
         GoogleAuthAutoConfiguration.class,
-        HelpersAutoConfiguration.class,
         JpaAuditingConfiguration.class
 })
 public class SsoAutoConfiguration {
