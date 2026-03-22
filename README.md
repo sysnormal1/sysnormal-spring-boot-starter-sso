@@ -43,8 +43,8 @@ Add the dependency below to your `pom.xml`:
 ```xml
 <dependency>
     <groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
-    <artifactId>sso-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>sysnormal-spring-boot-starter-sso</artifactId>
+    <version>0.0.1</version>
 </dependency>
 ```
 
