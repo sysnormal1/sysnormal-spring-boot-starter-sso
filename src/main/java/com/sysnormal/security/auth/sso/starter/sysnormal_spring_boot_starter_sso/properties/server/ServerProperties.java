@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author aalencarvz1
  * @version 1.0.0
  */
-@ConfigurationProperties(prefix = "spring.server")
+@ConfigurationProperties(prefix = "server")
 @Getter
 @Setter
 public class ServerProperties {

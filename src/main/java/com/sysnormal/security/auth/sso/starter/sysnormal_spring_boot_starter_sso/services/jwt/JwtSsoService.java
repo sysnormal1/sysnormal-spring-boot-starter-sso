@@ -37,11 +37,46 @@ public class JwtSsoService extends JwtService {
     public JwtSsoService(JwtProperties jwtProperties) {
         super(jwtProperties);
         this.jwtProperties = jwtProperties;
+
+        String privateKeyPath = jwtProperties.getPrivateKeyPath();
+
+        logger.info("Initializing JwtSsoService (private key phase) with path (from spring.jwt.private-key-path): '{}'", privateKeyPath);
+
         try {
-            this.privatePem = Files.readString(Path.of(jwtProperties.getPrivateKeyPath()));
-            this.privateKey = KeyUtils.parseRsaPrivateKey(privatePem);
+            Path path = Path.of(privateKeyPath);
+
+            logger.debug("Resolved private key path to absolute path: '{}'", path.toAbsolutePath());
+
+            if (!Files.exists(path)) {
+                logger.error("Private key file does not exist at path: '{}'", path.toAbsolutePath());
+                throw new IllegalStateException("Private key file not found: " + path.toAbsolutePath());
+            }
+
+            if (!Files.isReadable(path)) {
+                logger.error("Private key file is not readable at path: '{}'", path.toAbsolutePath());
+                throw new IllegalStateException("Private key file is not readable: " + path.toAbsolutePath());
+            }
+
+            logger.info("Private key file found. Attempting to read file...");
+
+            String pem = Files.readString(path);
+            this.privatePem = pem;
+
+            logger.info("Successfully read private key file ({} bytes).", pem.length());
+
+            this.privateKey = KeyUtils.parseRsaPrivateKey(pem);
+
+            logger.info("Successfully parsed RSA private key.");
+
         } catch (Exception e) {
-            throw new IllegalStateException("Error", e);
+            logger.error(
+                    "Failed to initialize JwtSsoService (private key phase) with path '{}'. Error: {}",
+                    privateKeyPath,
+                    e.getMessage(),
+                    e
+            );
+
+            throw new IllegalStateException("Failed to initialize JwtSsoService (private key)", e);
         }
     }
 
