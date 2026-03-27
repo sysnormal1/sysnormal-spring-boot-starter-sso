@@ -1,21 +1,25 @@
 package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.jwt;
 
+import com.sysnormal.commons.core.utils_core.TextUtils;
 import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtProperties;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso_client_protector.services.jwt.JwtService;
-import com.sysnormal.security.core.security_core.services.jwt.JwtCoreService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtSsoProperties;
+
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso_client_protector.services.jwt.JwtSsoClientProtectorService;
 import com.sysnormal.security.core.security_core.utils.KeyUtils;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
 /**
@@ -25,26 +29,30 @@ import java.util.Date;
  * @version 1.0.0
  */
 //@Service //dont anotate @component in starter
-@EnableConfigurationProperties(JwtProperties.class)
-public class JwtSsoService extends JwtService {
+@EnableConfigurationProperties(JwtSsoProperties.class)
+@Getter
+@Setter
+public class JwtSsoService extends JwtSsoClientProtectorService {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtSsoService.class);
 
-    private final JwtProperties jwtProperties;
-    private final String privatePem;
-    private final PrivateKey privateKey;
 
-    public JwtSsoService(JwtProperties jwtProperties) {
-        super(jwtProperties);
-        this.jwtProperties = jwtProperties;
+    private final JwtSsoProperties jwtSsoProperties;
+    private String privatePemFilePath;
+    private String privatePem;
+    private PrivateKey privateKey;
 
-        String privateKeyPath = jwtProperties.getPrivateKeyPath();
+    public JwtSsoService(JwtSsoProperties jwtSsoProperties) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        super(jwtSsoProperties);
+        this.jwtSsoProperties = jwtSsoProperties;
+        this.setPrivatePemFilePath(jwtSsoProperties.getPrivateKeyPath());
+    }
 
-        logger.info("Initializing JwtSsoService (private key phase) with path (from spring.jwt.private-key-path): '{}'", privateKeyPath);
-
-        try {
-            Path path = Path.of(privateKeyPath);
-
+    public void setPrivatePemFilePath(String privatePemFilePath) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        this.privatePemFilePath = privatePemFilePath;
+        logger.info("setted private pem file path: '{}'", this.privatePemFilePath);
+        if (TextUtils.hasNotNullText(this.privatePemFilePath)) {
+            Path path = Path.of(this.privatePemFilePath);
             logger.debug("Resolved private key path to absolute path: '{}'", path.toAbsolutePath());
 
             if (!Files.exists(path)) {
@@ -58,26 +66,18 @@ public class JwtSsoService extends JwtService {
             }
 
             logger.info("Private key file found. Attempting to read file...");
-
             String pem = Files.readString(path);
-            this.privatePem = pem;
-
-            logger.info("Successfully read private key file ({} bytes).", pem.length());
-
-            this.privateKey = KeyUtils.parseRsaPrivateKey(pem);
-
-            logger.info("Successfully parsed RSA private key.");
-
-        } catch (Exception e) {
-            logger.error(
-                    "Failed to initialize JwtSsoService (private key phase) with path '{}'. Error: {}",
-                    privateKeyPath,
-                    e.getMessage(),
-                    e
-            );
-
-            throw new IllegalStateException("Failed to initialize JwtSsoService (private key)", e);
+            this.setPrivatePem(pem);
         }
+    }
+
+    public void setPrivatePem(String privatePem) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        this.privatePem = privatePem;
+        logger.info("setted private pem ({} bytes).", this.privatePem.length());
+
+        this.privateKey = KeyUtils.parseRsaPrivateKey(this.privatePem);
+
+        logger.info("Successfully parsed RSA private key.");
     }
 
     public String createToken(AgentAuthDto agentAuthDto) {
@@ -107,7 +107,7 @@ public class JwtSsoService extends JwtService {
                 jwtBuilder.expiration(new Date(System.currentTimeMillis() + agentAuthDto.getExpiration()));
             }
         } else {
-            jwtBuilder.expiration(new Date(System.currentTimeMillis() + jwtProperties.getDefaultTokenExpiration()));
+            jwtBuilder.expiration(new Date(System.currentTimeMillis() + jwtSsoProperties.getDefaultTokenExpiration()));
         }
 
         return jwtBuilder.compact();
@@ -115,7 +115,7 @@ public class JwtSsoService extends JwtService {
 
     public String createRefreshToken(AgentAuthDto agentAuthDto) {
         Long oldExpiration = agentAuthDto.getExpiration();
-        agentAuthDto.setExpiration(jwtProperties.getDefaultRefreshTokenExpiration());
+        agentAuthDto.setExpiration(jwtSsoProperties.getDefaultRefreshTokenExpiration());
         String result = createToken(agentAuthDto);
         agentAuthDto.setExpiration(oldExpiration);
         return result;

@@ -9,7 +9,7 @@ import com.sysnormal.security.auth.auth_core.dtos.TokenRequestDTO;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.*;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.System;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.repositories.sso.*;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtProperties;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtSsoProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.security.SecurityProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.jwt.JwtSsoService;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.mail.MailService;
@@ -47,7 +47,7 @@ public class AuthenticationService {
 
     private final SecurityProperties properties;
 
-    private final JwtProperties jwtProperties;
+    private final JwtSsoProperties jwtSsoProperties;
 
     /*@Autowired*/
     private final JwtSsoService jwtSsoService;
@@ -78,11 +78,11 @@ public class AuthenticationService {
 
     public AuthenticationService(
             SecurityProperties properties,
-            JwtProperties jwtProperties,
+            JwtSsoProperties jwtSsoProperties,
             JwtSsoService jwtSsoService
     ) {
         this.properties = properties;
-        this.jwtProperties = jwtProperties;
+        this.jwtSsoProperties = jwtSsoProperties;
         this.jwtSsoService = jwtSsoService;
     }
 
@@ -194,7 +194,7 @@ public class AuthenticationService {
                     if (optionalAgent.isPresent()) {
                         if (RecordStatus.ACTIVE_ID == optionalAgent.get().getRecordStatusId()) {
                             agentAuthDto.setAgentId(optionalAgent.get().getId());
-                            agentAuthDto.setExpiration(jwtProperties.getDefaultTokenExpiration());
+                            agentAuthDto.setExpiration(jwtSsoProperties.getDefaultTokenExpiration());
 
                             ObjectNode queryParams = objectMapper.createObjectNode();
                             ObjectNode where = queryParams.putObject("where");
@@ -404,7 +404,7 @@ public class AuthenticationService {
                             agentAuthDto.setAgentId(agent.get().getId());
                             agentAuthDto.setIdentifierTypeId(agent.get().getIdentifierTypeId());
                             agentAuthDto.setIdentifier(agent.get().getIdentifier());
-                            agentAuthDto.setExpiration(jwtProperties.getDefaultRefreshTokenExpiration());
+                            agentAuthDto.setExpiration(jwtSsoProperties.getDefaultRefreshTokenExpiration());
                             agent.get().setLastPasswordChangeToken(jwtSsoService.createToken(agentAuthDto));
                             agentsRepository.save(agent.get());
                             String subject = "Password Recover";
