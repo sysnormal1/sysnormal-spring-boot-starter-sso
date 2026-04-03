@@ -6,7 +6,7 @@
 	<!--<groupId>com.sysnormal.security.auth.sso.starter</groupId>-->
 	<groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
 	<artifactId>sysnormal-spring-boot-starter-sso</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>sysnormal-spring-boot-starter-sso</name>
 	<description>Spring Boot Starter sso</description>
 	<url>https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso</url>
@@ -138,45 +138,45 @@
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.core</groupId>
 			<artifactId>default-data-swap-core</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.core</groupId>
 			<artifactId>utils-core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.spring</groupId>
 			<artifactId>spring-data-utils</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.spring</groupId>
 			<artifactId>spring-web-utils</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.sysnormal1.data</groupId>
 			<artifactId>base-data-model</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.sysnormal1.security.auth</groupId>
 			<artifactId>auth-core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.sysnormal1.security.core</groupId>
 			<artifactId>security-core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
 			<artifactId>sysnormal-spring-boot-starter-sso-client-protector</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 
 	</dependencies>
