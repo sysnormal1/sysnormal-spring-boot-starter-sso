@@ -6,7 +6,7 @@
 	<!--<groupId>com.sysnormal.security.auth.sso.starter</groupId>-->
 	<groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
 	<artifactId>sysnormal-spring-boot-starter-sso</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<name>sysnormal-spring-boot-starter-sso</name>
 	<description>Spring Boot Starter sso</description>
 	<url>https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso</url>
