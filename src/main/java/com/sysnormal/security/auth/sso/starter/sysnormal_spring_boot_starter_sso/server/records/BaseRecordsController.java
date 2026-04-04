@@ -33,7 +33,8 @@ public abstract class BaseRecordsController<S extends BaseSsoRecordsService<? ex
     }
 
     @RequestMapping(
-            path = { "/{id}", "/get/{id}", "/get/{id}/" },
+            //path = { "/{id}", "/get/{id}", "/get/{id}/" },
+            path = { "/{id:\\d+}", "/get/{id:\\d+}", "/get/{id:\\d+}/" },
             method = { RequestMethod.GET, RequestMethod.POST }
     )
     public ResponseEntity<DefaultDataSwap> getById(@PathVariable("id") Long id, @RequestBody(required = false) JsonNode body) {
@@ -45,12 +46,12 @@ public abstract class BaseRecordsController<S extends BaseSsoRecordsService<? ex
         return ResponseUtils.sendDefaultDataSwapResponse(service.put(body));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id:\\d+}")
     public ResponseEntity<DefaultDataSwap> patch(@PathVariable("id") Long id, @RequestBody(required = false) JsonNode body) {
         return ResponseUtils.sendDefaultDataSwapResponse(service.patch(id, body));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<DefaultDataSwap> deleteById(@PathVariable("id") Long id, @RequestBody(required = false) JsonNode body) {
         return ResponseUtils.sendDefaultDataSwapResponse(service.deleteById(id, body));
     }

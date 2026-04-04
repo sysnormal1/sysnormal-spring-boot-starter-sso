@@ -90,4 +90,12 @@ public class ResourcesController extends BaseRecordsController<ResourcesService>
         return ResponseUtils.sendDefaultDataSwapResponse(result);
     }
 
+    @PostMapping("/get_with_permissions")
+    public ResponseEntity<DefaultDataSwap> getWithPermissions(
+            @RequestBody(required = false) JsonNode body
+    ) {
+        DefaultDataSwap result = service.getWithPermissions(body);
+        return ResponseUtils.sendDefaultDataSwapResponse(result);
+    }
+
 }

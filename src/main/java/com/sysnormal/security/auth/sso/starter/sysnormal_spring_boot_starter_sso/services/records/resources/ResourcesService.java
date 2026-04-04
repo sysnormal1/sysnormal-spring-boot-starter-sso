@@ -7,6 +7,7 @@ import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.auth.AuthenticationService;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.records.BaseSsoRecordsService;
 import io.jsonwebtoken.Claims;
+import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,6 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
         try {
             JsonNode queryParams = params.path("queryParams");
 
-
             Claims claims = authenticationService.getAuthenticatedClaims();//jwtService.getClaims(token);
             Long agentId = authenticationService.getAuthenticatedAgentId();//claims.get("agentId", Long.class);
             Long systemId = claims.get("systemId", Long.class);
@@ -116,7 +116,25 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             }
             Long resourceTypeId = JsonUtils.get(queryParams,"resourceTypeId", JsonNode::asLong).orElse(null);
             List<String> resourcePaths = JsonUtils.jsonArrayToList(queryParams.path("resourcePaths"), JsonNode::asString);
-            result.data = repository.findResourcePermissions(systemId, resourceTypeId, accessProfileId, agentId, resourcePaths);
+            result.data = repository.findResourcePermissions(systemId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER);
+            result.success = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setException(e);
+        }
+        return result;
+    }
+
+    public DefaultDataSwap getWithPermissions(JsonNode params){
+        DefaultDataSwap result = new DefaultDataSwap();
+        try {
+            JsonNode queryParams = params.path("queryParams");
+            List<Long> agentIds = JsonUtils.jsonArrayToList(queryParams.path("agentIds"), JsonNode::asLong);
+            List<Long> systemIds = JsonUtils.jsonArrayToList(queryParams.path("systemIds"), JsonNode::asLong);
+            List<Long> accessProfileIds = JsonUtils.jsonArrayToList(queryParams.path("accessProfileIds"), JsonNode::asLong);
+            List<Long> resourceTypeIds = JsonUtils.jsonArrayToList(queryParams.path("resourceTypeIds"), JsonNode::asLong);
+            List<String> resourcePaths = JsonUtils.jsonArrayToList(queryParams.path("resourcePaths"), JsonNode::asString);
+            result.data = repository.findResourcePermissions(systemIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT);
             result.success = true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -23,13 +23,13 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             Root<Resource> resource,
             Join<Resource, ResourcePermission> joinPermission,
             List<Predicate> joinPredicates,
-            Long agentId,
-            Long accessProfileId
+            List<Long> agentIds,
+            List<Long> accessProfileIds
     ) {
-        if (agentId != null) {
-            if (accessProfileId != null) {
-                joinPredicates.add(joinPermission.get("agentId").equalTo(agentId));
-                joinPredicates.add(joinPermission.get("accessProfileId").equalTo(accessProfileId));
+        if (agentIds != null &&  !agentIds.isEmpty()) {
+            if (accessProfileIds != null &&  !accessProfileIds.isEmpty()) {
+                joinPredicates.add(joinPermission.get("agentId").in(agentIds));
+                joinPredicates.add(joinPermission.get("accessProfileId").in(accessProfileIds));
             } else {
                 Subquery<Integer> sqAgentPermission = query.subquery(Integer.class);
                 Root<ResourcePermission> r2 = sqAgentPermission.from(ResourcePermission.class);
@@ -37,7 +37,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 sqAgentPermission.select(builder.literal(1));
                 sqAgentPermission.where(
                         builder.equal(r2.get("resourceId"), resource.get("id")),
-                        r2.get("agentId").equalTo(agentId)
+                        r2.get("agentId").in(agentIds)
                 );
 
                 Subquery<Long> sqAccessProfiles = query.subquery(Long.class);
@@ -46,10 +46,10 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 sqAccessProfiles.select(aas.get("accessProfileId"));
                 sqAccessProfiles.where(
                         builder.equal(aas.get("systemId"), resource.get("systemId")),
-                        aas.get("agentId").equalTo(agentId)
+                        aas.get("agentId").in(agentIds)
                 );
 
-                Predicate agentMatch = joinPermission.get("agentId").equalTo(agentId);
+                Predicate agentMatch = joinPermission.get("agentId").in(agentIds);
 
                 Predicate profileFallback = builder.and(
                         builder.not(builder.exists(sqAgentPermission)),
@@ -60,8 +60,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             }
         } else {
             joinPredicates.add(joinPermission.get("agentId").isNull()); //protect to get specific permissions of agents without parametrized in request
-            if (accessProfileId != null) {
-                joinPredicates.add(joinPermission.get("accessProfileId").equalTo(accessProfileId));
+            if (accessProfileIds != null &&  !accessProfileIds.isEmpty()) {
+                joinPredicates.add(joinPermission.get("accessProfileId").in(accessProfileIds));
             } else {
                 joinPredicates.add(joinPermission.get("accessProfileId").isNull()); //protect do get all permissions if not parametrized in request
             }
@@ -70,11 +70,12 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
     @Override
     public List<ResourcePermissionView> findResourcePermissions(
-            Long systemId,
-            Long resourceTypeId,
-            Long accessProfileId,
-            Long agentId,
-            List<String> resourcePaths
+            List<Long> systemIds,
+            List<Long> resourceTypeIds,
+            List<Long> accessProfileIds,
+            List<Long> agentIds,
+            List<String> resourcePaths,
+            JoinType joinType
     ) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -82,15 +83,15 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         Root<Resource> r = cq.from(Resource.class);
         Join<Resource, ResourcePermission> p =
-                r.join("resourcePermissions", JoinType.INNER );
+                r.join("resourcePermissions", joinType );
 
         List<Predicate> rootPredicates = new ArrayList<>();
         List<Predicate> joinPredicates = new ArrayList<>();
-        if (systemId != null) {
-            rootPredicates.add(r.get("systemId").equalTo(systemId));
+        if (systemIds != null && !systemIds.isEmpty()) {
+            rootPredicates.add(r.get("systemId").in(systemIds));
         }
-        if (resourceTypeId != null) {
-            rootPredicates.add(r.get("resourceTypeId").equalTo(resourceTypeId));
+        if (resourceTypeIds != null && !resourceTypeIds.isEmpty()) {
+            rootPredicates.add(r.get("resourceTypeId").in(resourceTypeIds));
         }
 
         getResourcePermissionJoin(
@@ -99,50 +100,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 r,
                 p,
                 joinPredicates,
-                agentId,
-                accessProfileId
+                agentIds,
+                accessProfileIds
         );
-
-        /*if (agentIds != null && !agentIds.isEmpty()) {
-            if (accessProfileIds != null && !accessProfileIds.isEmpty()) {
-                joinPredicates.add(p.get("agentId").in(agentIds));
-                joinPredicates.add(p.get("accessProfileId").in(accessProfileIds));
-            } else {
-                Subquery<Integer> sqAgentPermission = cq.subquery(Integer.class);
-                Root<ResourcePermission> r2 = sqAgentPermission.from(ResourcePermission.class);
-
-                sqAgentPermission.select(cb.literal(1));
-                sqAgentPermission.where(
-                        cb.equal(r2.get("resourceId"), r.get("id")),
-                        r2.get("agentId").in(agentIds)
-                );
-
-                Subquery<Long> sqAccessProfiles = cq.subquery(Long.class);
-                Root<AgentXAccessProfileXSystem> aas = sqAccessProfiles.from(AgentXAccessProfileXSystem.class);
-
-                sqAccessProfiles.select(aas.get("accessProfileId"));
-                sqAccessProfiles.where(
-                        cb.equal(aas.get("systemId"), r.get("systemId")),
-                        aas.get("agentId").in(agentIds)
-                );
-
-                Predicate agentMatch = p.get("agentId").in(agentIds);
-
-                Predicate profileFallback = cb.and(
-                        cb.not(cb.exists(sqAgentPermission)),
-                        p.get("accessProfileId").in(sqAccessProfiles)
-                );
-
-                joinPredicates.add(cb.and(cb.or(agentMatch, profileFallback)));
-            }
-        } else {
-            joinPredicates.add(p.get("agentId").isNull()); //protect to get specific permissions of agents without parametrized in request
-            if (accessProfileIds != null && !accessProfileIds.isEmpty()) {
-                joinPredicates.add(p.get("accessProfileId").in(accessProfileIds));
-            } else {
-                joinPredicates.add(p.get("accessProfileId").isNull()); //protect do get all permissions if not parametrized in request
-            }
-        }*/
 
         if (resourcePaths != null && !resourcePaths.isEmpty()) {
             rootPredicates.add(r.get("resourcePath").in(resourcePaths));
@@ -150,7 +110,6 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
         if (!joinPredicates.isEmpty()) {
             p.on(cb.and(joinPredicates.toArray(Predicate[]::new)));
         }
-
 
         cq.select(cb.construct(
                 ResourcePermissionView.class, //must maintain same order of fields in class
@@ -190,6 +149,35 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
     }
 
     @Override
+    public List<ResourcePermissionView> findResourcePermissions(
+            Long systemId,
+            Long resourceTypeId,
+            Long accessProfileId,
+            Long agentId,
+            List<String> resourcePaths,
+            JoinType joinType
+    ) {
+        List<Long> systemIds = null;
+        if (systemId != null) {
+            systemIds = List.of(systemId);
+        }
+        List<Long> resourceTypeIds = null;
+        if (resourceTypeId != null) {
+            resourceTypeIds = List.of(resourceTypeId);
+        }
+        List<Long> accessProfileIds = null;
+        if (accessProfileId != null) {
+            accessProfileIds = List.of(accessProfileId);
+        }
+        List<Long> agentIds = null;
+        if (agentId != null) {
+            agentIds = List.of(agentId);
+        }
+
+        return findResourcePermissions(systemIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType);
+    }
+
+    @Override
     public List<ResourcePermissionView> findAlloweds(
             Long systemId,
             Long resourceTypeId,
@@ -217,12 +205,14 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             rootPredicates.add(r.get("resourceTypeId").equalTo(resourceTypeId));
         }
 
-        /*if (accessProfileId != null) {
-            joinPredicates.add(p.get("accessProfileId").equalTo(accessProfileIds));
+        List<Long> agentIds = null;
+        if (agentId != null) {
+            agentIds = List.of(agentId);
         }
-        if (agentIds != null && !agentIds.isEmpty()) {
-            joinPredicates.add(p.get("agentId").in(agentIds));
-        }*/
+        List<Long> accessProfileIds = null;
+        if (accessProfileId != null) {
+            accessProfileIds = List.of(accessProfileId);
+        }
 
         getResourcePermissionJoin(
                 cb,
@@ -230,8 +220,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 r,
                 p,
                 joinPredicates,
-                agentId,
-                accessProfileId
+                agentIds,
+                accessProfileIds
         );
 
 
