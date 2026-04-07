@@ -95,12 +95,13 @@ public class AuthenticationService {
             Boolean returnRefreshToken,
             String refreshToken
     ) throws JsonProcessingException {
-        logger.debug("INIT {}.{}",this.getClass().getSimpleName(),"getAuthDataResult");
+        logger.debug("INIT {}.{}, checkPassword {}",this.getClass().getSimpleName(),"getAuthDataResult", checkPassword);
         DefaultDataSwap result = new DefaultDataSwap();
         if (optionalAgent.isPresent()) {
             if (agentAuthDto.getAgentId() == null) {
                 agentAuthDto.setAgentId(optionalAgent.get().getId());
             }
+            logger.debug("password check: {} {} {} {}",checkPassword, agentAuthDto.getPassword(),optionalAgent.get().getPassword(), encoder.matches(agentAuthDto.getPassword(), optionalAgent.get().getPassword()));
             if (!checkPassword || (checkPassword && encoder.matches(agentAuthDto.getPassword(), optionalAgent.get().getPassword()))) {
                 if (optionalAgent.get().getDeletedAt() == null && Objects.equals(RecordStatus.ACTIVE_ID,optionalAgent.get().getRecordStatusId())) {
 
@@ -118,8 +119,11 @@ public class AuthenticationService {
                     if (!StringUtils.hasText(token) || returnRefreshToken) {
                         agentsRepository.save(optionalAgent.get());
                     }
-                    optionalAgent.get().setPassword(null);
-                    dataObject.put("agent", objectMapper.convertValue(optionalAgent.get(), Map.class));
+                    //optionalAgent.get().setPassword(null); //not use, it active "dirt check" and save register if is in active transaction
+                    Map<String, Object> agentMap = objectMapper.convertValue(optionalAgent.get(), Map.class);
+                    agentMap.remove("password"); // remote only on map, avoid dirt check
+
+                    dataObject.put("agent", agentMap);
                     result.data = dataObject;
                     result.httpStatusCode = HttpStatus.OK.value();
                     result.success = true;
@@ -220,6 +224,7 @@ public class AuthenticationService {
                             }
 
                             if (agentHasRelations) {
+                                logger.debug("xxxxxxxxxxxyyyyyyyyyyy {}",optionalAgent.get().getPassword());
                                 result = getAuthDataResult(
                                         agentAuthDto,
                                         optionalAgent,
@@ -310,9 +315,20 @@ public class AuthenticationService {
                                 newAgent.setIdentifierTypeId(identifierTypeId);
                                 newAgent.setIdentifier(identifier);
                                 newAgent.setEmail(email);
-                                newAgent.setPassword(encoder.encode(agentAuthDto.getPassword()));
+                                String encoded = encoder.encode(agentAuthDto.getPassword());
+                                logger.debug("passowrd on register {}, {}", agentAuthDto.getPassword(), encoded);
+                                newAgent.setPassword(encoded);
                                 agentsRepository.save(newAgent);
                                 result = getAuthDataResult(agentAuthDto, agentsRepository.findByIdentifierTypeIdAndIdentifier(newAgent.getIdentifierTypeId(), newAgent.getIdentifier()), false, null, true, null);
+
+                                //register relationed system to user
+                                if (result.success && agentAuthDto.getSystemId() != null) {
+                                    AgentXAccessProfileXSystem agentXAccessProfileXSystem = new AgentXAccessProfileXSystem();
+                                    agentXAccessProfileXSystem.setAgentId(newAgent.getId());
+                                    agentXAccessProfileXSystem.setAccessProfileId(AccessProfile.DEFAULT_ID);
+                                    agentXAccessProfileXSystem.setSystemId(agentAuthDto.getSystemId());
+                                    agentsXAccessProfilesXSystemsRepository.save(agentXAccessProfileXSystem);
+                                }
                             }
                         } else {
                             result.httpStatusCode = HttpStatus.CONFLICT.value();

@@ -44,12 +44,20 @@ public class AccessProfile extends BaseSsoEntity<AccessProfile> {
     private String notes;
 
     public static final long SYSTEM_ID = 1;
+    public static final long DEFAULT_ID = 2;
 
     public static final AccessProfile SYSTEM = new AccessProfile(){{
         setId(SYSTEM_ID);
         setIsSysRec((byte) 1);
         setName("SYSTEM");
         setAllowAccessToAllModuleRoutines((byte) 1);
+    }};
+
+    public static final AccessProfile DEFAULT = new AccessProfile(){{
+        setId(DEFAULT_ID);
+        setIsSysRec((byte) 1);
+        setName("DEFAULT");
+        setAllowAccessToAllModuleRoutines((byte) 0);
     }};
 
 }

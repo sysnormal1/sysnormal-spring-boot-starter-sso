@@ -394,6 +394,12 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setString(3, AccessProfile.SYSTEM.getName());
                 ps.executeUpdate();
             }
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setLong(1, AccessProfile.DEFAULT_ID);
+                ps.setByte(2, AccessProfile.DEFAULT.getIsSysRec());
+                ps.setString(3, AccessProfile.DEFAULT.getName());
+                ps.executeUpdate();
+            }
 
 
             //AGENTS_X_ACCESS_PROFILES_X_SYSTEMS
