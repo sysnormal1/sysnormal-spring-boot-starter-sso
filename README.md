@@ -1,6 +1,10 @@
 # Sysnormal Spring Boot SSO Starter
 
-![Version](https://img.shields.io/badge/maven--central-0.0.1--SNAPSHOT-orange)
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.sysnormal1.security.auth.sso.starter/sysnormal-spring-boot-starter-sso.svg)](...)
+[![MvnRepository](https://img.shields.io/badge/mvnrepository-view-blue)](https://mvnrepository.com/artifact/io.github.sysnormal1.security.auth.sso.starter/sysnormal-spring-boot-starter-sso-client-protector)
+[![GitHub tag](https://img.shields.io/github/v/tag/sysnormal1/sysnormal-spring-boot-starter-sso)](https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso)
+
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x+-brightgreen)
 ![Spring Web](https://img.shields.io/badge/Spring-Web-orange)
@@ -16,7 +20,7 @@
 **SSO Starter** is a modular Java library built with **Spring Boot** that provides a complete infrastructure for **Single Sign-On (SSO)** authentication.  
 It enables centralized authentication across multiple applications with minimal setup, following Spring Boot's auto-configuration principles.
 
-There is also an implementation of a ready-to-use client library for Java backends/APIs that want to integrate with this SSO server. You can find its details, dependency, and GitHub repository in the [Base SSO Server Client Config](https://github.com/aalencarvz1/base-server-sso-client-security-config).
+There is also an implementation of a ready-to-use client library for Java backends/APIs that want to integrate with this SSO server. You can find its details, dependency, and GitHub repository in the [Sysnormal Sso client protector starter](https://github.com/sysnormal1/sysnormal-spring-boot-starter-sso-client-protector.git).
 
 ---
 
@@ -44,7 +48,7 @@ Add the dependency below to your `pom.xml`:
 <dependency>
     <groupId>io.github.sysnormal1.security.auth.sso.starter</groupId>
     <artifactId>sysnormal-spring-boot-starter-sso</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.5</version>
 </dependency>
 ```
 
@@ -58,39 +62,76 @@ If you wish to customize its behavior, check the sections below about **applicat
 In your main application, configure the library using `application.yml` or `application.properties`:
 
 ```yaml
-sso:
-  server:
-    enabled: true
-    port: 3000
-    local-port: 3001
-    ssl:
-      enabled: false
-
-  database:
-    enabled: true
-    datasource:
-      jdbc-url: jdbc:mysql://localhost:3306/my_sso
-      username: root
-      password: masterkey
+server:
+  port: 3000 #https, if server.ssl.enabled is true
+  local-port: 3001 #to use internally with http
+  ssl:
+    enabled: true #to up https port
+    key-store: your_keystore_path.p12
+    key-store-password: your_keystore_password
+    key-store-type: PKCS12
+spring:
+  datasource:
+    sso: #must be this name for serialization by starter on properties file
+      id: 1
+      name: server
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/my_sso_db
+      username: root #dml user
+      password: masterkey #dml user password
       driver-class-name: com.mysql.cj.jdbc.Driver
-
+      root-user-name: root  #for create database and users if needed
+      root-password: masterkey
+      long-text-max-length: 4294967295 #used by jpa to decide if use long or normal text on create tables with text columns
+  flyway:
+    enabled: true #to auto-ddl (create) tables
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect:
+          org:
+            hibernate:
+              dialect: MySQL8Dialect
+  jwt:
+    public-key-path: your_public_key_path.pem #these keys are used to generate and verify jwt tokens
+    private-key-path: your_private_key_path.pem  #these keys are used to generate and verify jwt tokens
+    default-token-expiration: 60000
+    default-refresh-token-expiration: 120000
   security:
-    enabled: true
-
+    public-endpoints: /auth/login, /auth/register, /auth/check_token, /auth/send_email_recover_password, /auth/password_change, /auth/refresh_token, /auth/google/get_login_url, /auth/google/handle_code, /auth/github/get_login_url, /auth/github/handle_code
+    password-rules:
+      min-length: 8
+    system-user:
+      email: your_system_access_user_email
+      password: your_system_access_user_password
   auth:
     google:
       enabled: true
-      client-id: YOUR_GOOGLE_CLIENT_ID
-      client-secret: YOUR_GOOGLE_CLIENT_SECRET
-      
+      client-id: your_google_auth_api_client_id
+      client-secret: your_google_auth_api_client_secret
+    github:
+      enabled: true
+      client-id: your_github_auth_api_client_id
+      client-secret: your_github_auth_api_client_secret
   mail:
-    enabled: true
-    host: smtp.gmail.com
-    username: user@gmail.com
-    password: password
+    host: your_smtp_mail_address
+    port: 465
+    username: your_mail_to_send_verifications_to_users
+    password: your_mail_password_to_send_verifications_to_users
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: "*"
+          starttls:
+            enable: false
+
 ```
 
-> ⚠️ You must manually create the database schema before the first execution.
+> ⚠️ if correct configured on application.yml, the database is auto-create on startup.
 
 ---
 

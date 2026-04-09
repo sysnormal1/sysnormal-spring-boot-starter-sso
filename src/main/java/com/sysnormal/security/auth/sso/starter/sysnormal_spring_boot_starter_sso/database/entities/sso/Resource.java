@@ -87,9 +87,7 @@ public class Resource extends BaseSsoEntity<Resource> {
     public static final long RESOURCES_ID = 25;
     public static final long RESOURCE_PERMISSIONS_ID = 30;
     public static final long RELATIONSHIPS_ID = 40;
-    public static final long SYSTEMS_X_ACCESS_PROFILES_ID = 41;
-    public static final long AGENTS_X_ACCESS_PROFILES_ID = 42;
-    public static final long AGENTS_X_SYSTEMS_ID = 43;
+    public static final long AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID = 41;
 
     public static  final Resource SYSTEMS = new Resource(){{
         setId(SYSTEMS_ID);
@@ -151,37 +149,17 @@ public class Resource extends BaseSsoEntity<Resource> {
         setNumericOrder(Integer.valueOf(String.valueOf(RELATIONSHIPS_ID)));
     }};
 
-    public static  final Resource SYSTEMS_X_ACCESS_PROFILES = new Resource(){{
-        setId(SYSTEMS_X_ACCESS_PROFILES_ID);
+    public static  final Resource AGENTS_X_ACCESS_PROFILES_X_SYSTEMS = new Resource(){{
+        setId(AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID);
         setIsSysRec((byte) 1);
         setParentId(RELATIONSHIPS_ID);
         setSystemId(System.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
-        setName("SYSTEMS_X_ACCESS_PROFILES");
-        setResourcePath("/records/relationships/systems_x_access_profiles");
-        setNumericOrder(Integer.valueOf(String.valueOf(SYSTEMS_X_ACCESS_PROFILES_ID)));
+        setName("AGENTS_X_ACCESS_PROFILES_X_SYSTEMS");
+        setResourcePath("/records/relationships/agents_x_access_profiles_x_systems");
+        setNumericOrder(Integer.valueOf(String.valueOf(AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID)));
     }};
 
-    public static  final Resource AGENTS_X_ACCESS_PROFILES = new Resource(){{
-        setId(AGENTS_X_ACCESS_PROFILES_ID);
-        setIsSysRec((byte) 1);
-        setParentId(RELATIONSHIPS_ID);
-        setSystemId(System.SSO_WEBCLIENT_ID);
-        setResourceTypeId(ResourceType.URL_ID);
-        setName("AGENTS_X_ACCESS_PROFILES");
-        setResourcePath("/records/relationships/agents_x_access_profiles");
-        setNumericOrder(Integer.valueOf(String.valueOf(AGENTS_X_ACCESS_PROFILES_ID)));
-    }};
 
-    public static  final Resource AGENTS_X_SYSTEMS = new Resource(){{
-        setId(AGENTS_X_SYSTEMS_ID);
-        setIsSysRec((byte) 1);
-        setParentId(RELATIONSHIPS_ID);
-        setSystemId(System.SSO_WEBCLIENT_ID);
-        setResourceTypeId(ResourceType.URL_ID);
-        setName("AGENTS_X_SYSTEMS");
-        setResourcePath("/records/relationships/agents_x_systems");
-        setNumericOrder(Integer.valueOf(String.valueOf(AGENTS_X_SYSTEMS_ID)));
-    }};
 
 }

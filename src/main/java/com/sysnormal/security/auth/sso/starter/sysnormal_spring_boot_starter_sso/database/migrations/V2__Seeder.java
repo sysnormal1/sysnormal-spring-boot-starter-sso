@@ -344,44 +344,17 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, Resource.SYSTEMS_X_ACCESS_PROFILES_ID);
-                ps.setByte(2, Resource.SYSTEMS_X_ACCESS_PROFILES.getIsSysRec());
-                ps.setObject(3, Resource.SYSTEMS_X_ACCESS_PROFILES.getParentId());
-                ps.setLong(4, Resource.SYSTEMS_X_ACCESS_PROFILES.getSystemId());
-                ps.setLong(5, Resource.SYSTEMS_X_ACCESS_PROFILES.getResourceTypeId());
-                ps.setString(6, Resource.SYSTEMS_X_ACCESS_PROFILES.getName());
-                ps.setString(7, Resource.SYSTEMS_X_ACCESS_PROFILES.getResourcePath());
-                ps.setString(8, Resource.SYSTEMS_X_ACCESS_PROFILES.getIcon());
-                ps.setInt(9, Resource.SYSTEMS_X_ACCESS_PROFILES.getNumericOrder());
+                ps.setLong(1, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID);
+                ps.setByte(2, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getIsSysRec());
+                ps.setObject(3, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getParentId());
+                ps.setLong(4, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getSystemId());
+                ps.setLong(5, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getResourceTypeId());
+                ps.setString(6, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getName());
+                ps.setString(7, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getResourcePath());
+                ps.setString(8, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getIcon());
+                ps.setInt(9, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getNumericOrder());
                 ps.executeUpdate();
             }
-            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, Resource.AGENTS_X_ACCESS_PROFILES_ID);
-                ps.setByte(2, Resource.AGENTS_X_ACCESS_PROFILES.getIsSysRec());
-                ps.setObject(3, Resource.AGENTS_X_ACCESS_PROFILES.getParentId());
-                ps.setLong(4, Resource.AGENTS_X_ACCESS_PROFILES.getSystemId());
-                ps.setLong(5, Resource.AGENTS_X_ACCESS_PROFILES.getResourceTypeId());
-                ps.setString(6, Resource.AGENTS_X_ACCESS_PROFILES.getName());
-                ps.setString(7, Resource.AGENTS_X_ACCESS_PROFILES.getResourcePath());
-                ps.setString(8, Resource.AGENTS_X_ACCESS_PROFILES.getIcon());
-                ps.setInt(9, Resource.AGENTS_X_ACCESS_PROFILES.getNumericOrder());
-                ps.executeUpdate();
-            }
-            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, Resource.AGENTS_X_SYSTEMS_ID);
-                ps.setByte(2, Resource.AGENTS_X_SYSTEMS.getIsSysRec());
-                ps.setObject(3, Resource.AGENTS_X_SYSTEMS.getParentId());
-                ps.setLong(4, Resource.AGENTS_X_SYSTEMS.getSystemId());
-                ps.setLong(5, Resource.AGENTS_X_SYSTEMS.getResourceTypeId());
-                ps.setString(6, Resource.AGENTS_X_SYSTEMS.getName());
-                ps.setString(7, Resource.AGENTS_X_SYSTEMS.getResourcePath());
-                ps.setString(8, Resource.AGENTS_X_SYSTEMS.getIcon());
-                ps.setInt(9, Resource.AGENTS_X_SYSTEMS.getNumericOrder());
-                ps.executeUpdate();
-            }
-
-
-
 
             //ACCESS_PROFILES
             fieldsNames = new String[]{"id", "is_sys_rec", "name"};
