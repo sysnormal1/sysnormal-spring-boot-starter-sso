@@ -175,7 +175,6 @@ public class AuthenticationService {
                     if (StringUtils.hasText(identifier)) {
                         Long identifierTypeId = agentAuthDto.getIdentifierTypeId();
                         if (identifierTypeId == null) {
-                            logger.debug("xxxxxxxxxxxxxxxxxx {} {}", identifier, mailService.isValidEmail(identifier));
                             if (mailService.isValidEmail(identifier)) {
                                 identifierTypeId = IdentifierType.EMAIL_ID;
                             } else {
@@ -207,14 +206,20 @@ public class AuthenticationService {
                             //check if access profile exists
                             if (agentAuthDto.getAccessProfileId() != null) {
                                 Optional<AccessProfile> optionalAccessProfile = accessProfileRepository.findById(agentAuthDto.getAccessProfileId());
-                                if (optionalAccessProfile.isEmpty()) throw new Exception("accessProfile not found");
+                                if (optionalAccessProfile.isEmpty()) {
+                                    result.httpStatusCode = HttpStatus.UNAUTHORIZED.value();
+                                    throw new Exception("accessProfile not found");
+                                }
                                 where.put("accessProfileId", agentAuthDto.getAccessProfileId());
                             }
 
                             //check if system exists
                             if (agentAuthDto.getSystemId() != null) {
                                 Optional<System> optionalSystem = systemsRepository.findById(agentAuthDto.getSystemId());
-                                if (optionalSystem.isEmpty()) throw new Exception("system not found");
+                                if (optionalSystem.isEmpty()) {
+                                    result.httpStatusCode = HttpStatus.UNAUTHORIZED.value();
+                                    throw new Exception("system not found");
+                                }
                                 where.put("systemId", agentAuthDto.getSystemId());
                             }
 

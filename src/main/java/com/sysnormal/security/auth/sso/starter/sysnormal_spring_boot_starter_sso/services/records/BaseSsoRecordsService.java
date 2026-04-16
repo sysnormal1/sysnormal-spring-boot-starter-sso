@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -82,7 +83,6 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             result.data = repository.findAll(getSpecificationFromJsonNode(params));
             result.success = true;
         } catch (Exception e) {
-            e.printStackTrace();
             result.setException(e);
         }
         logger.debug("END {}.{}", this.getClass().getSimpleName(), "get");
@@ -113,6 +113,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
         DefaultDataSwap result = new DefaultDataSwap();
         try {
             if (params == null || params.isEmpty()) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                 throw new IllegalArgumentException("missing data");
             }
 
@@ -134,6 +135,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
         DefaultDataSwap result = new DefaultDataSwap();
         try {
             if (params == null || params.isEmpty() || id == null) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                 throw new IllegalArgumentException("missing data");
             }
 
@@ -161,6 +163,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
         DefaultDataSwap result = new DefaultDataSwap();
         try {
             if (params == null || params.isEmpty() || id == null) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                 throw new IllegalArgumentException("missing data");
             }
 
@@ -185,6 +188,7 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
         DefaultDataSwap result = new DefaultDataSwap();
         try {
             if (params == null || params.isEmpty()) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                 throw new IllegalArgumentException("missing data");
             }
 

@@ -50,6 +50,7 @@ public class ResourcesController extends BaseRecordsController<ResourcesService>
 
                 if (agentId == null) {
                     //agentId = JsonUtils.get(queryParams,"agentId", JsonNode::asLong).orElse(null);
+                    result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                     throw new Exception("missing authenticated agent id");
                 }
 

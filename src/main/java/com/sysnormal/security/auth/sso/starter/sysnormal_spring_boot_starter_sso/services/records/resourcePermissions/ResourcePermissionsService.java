@@ -7,6 +7,7 @@ import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.records.BaseSsoRecordsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 
@@ -49,6 +50,7 @@ public class ResourcePermissionsService extends BaseSsoRecordsService<ResourcePe
                             }
                             repository.save(optionalResourcePermission.get());
                         } else {
+                            result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                             throw new Exception("resource permission not found");
                         }
                     } else {
@@ -81,7 +83,6 @@ public class ResourcePermissionsService extends BaseSsoRecordsService<ResourcePe
                 result.message = "missing data";
             }
         } catch (Exception e) {
-            e.printStackTrace();
             result.setException(e);
         }
         return result;

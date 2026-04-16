@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 
@@ -87,7 +88,6 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             );
             result.success = true;
         } catch (Exception e) {
-            e.printStackTrace();
             result.setException(e);
         }
         logger.debug("END {}.{}", this.getClass().getSimpleName(), "get");
@@ -106,6 +106,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
 
             if (agentId == null) {
                 //agentId = JsonUtils.get(queryParams,"agentId", JsonNode::asLong).orElse(null);
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                 throw new Exception("missing authenticated agent id");
             }
             if (accessProfileId == null) {
@@ -119,7 +120,6 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             result.data = repository.findResourcePermissions(systemId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER);
             result.success = true;
         } catch (Exception e) {
-            e.printStackTrace();
             result.setException(e);
         }
         return result;
@@ -137,7 +137,6 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             result.data = repository.findResourcePermissions(systemIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT);
             result.success = true;
         } catch (Exception e) {
-            e.printStackTrace();
             result.setException(e);
         }
         return result;

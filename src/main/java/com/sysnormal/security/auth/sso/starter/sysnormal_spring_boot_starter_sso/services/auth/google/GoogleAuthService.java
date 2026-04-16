@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tools.jackson.databind.ObjectMapper;
@@ -127,6 +128,7 @@ public class GoogleAuthService {
                     result = authenticationService.register(agentAuthDto);
                 }
             } else {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
                 throw new Exception("token info not contains identifier");
             }
         } catch (Exception e) {
