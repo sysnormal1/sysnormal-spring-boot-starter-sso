@@ -3,6 +3,8 @@ package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_ss
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.System;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * systems repository
  *
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SystemsRepository extends BaseSsoRepository<System, Long> {
 
+    Optional<System> findByName(String name);
 
 }
 
