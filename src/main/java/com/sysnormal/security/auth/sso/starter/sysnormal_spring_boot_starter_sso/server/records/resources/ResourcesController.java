@@ -54,7 +54,7 @@ public class ResourcesController extends BaseRecordsController<ResourcesService>
                     throw new Exception("missing authenticated agent id");
                 }
 
-                Long systemId = claims.get("systemId", Long.class);
+                Long domainId = claims.get("domainId", Long.class);
                 Long accessProfileId = claims.get("accessProfileId", Long.class);
 
                 // se body vier null, cria objeto vazio
@@ -68,7 +68,7 @@ public class ResourcesController extends BaseRecordsController<ResourcesService>
 
                 ObjectNode queryParams = (ObjectNode) objectBody.get("queryParams");
                 queryParams.put("agentId",agentId);
-                if (systemId != null) queryParams.put("systemId",systemId);
+                if (domainId != null) queryParams.put("domainId",domainId);
                 if (accessProfileId != null) queryParams.put("accessProfileId",accessProfileId);
                 objectBody.set("queryParams", queryParams);
                 result = service.getAlloweds(objectBody);

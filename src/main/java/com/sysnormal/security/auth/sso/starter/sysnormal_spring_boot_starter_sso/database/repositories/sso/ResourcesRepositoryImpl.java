@@ -1,6 +1,6 @@
 package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.repositories.sso;
 
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.AgentXAccessProfileXSystem;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.AgentXAccessProfileXDomain;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.Resource;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.ResourcePermission;
 import jakarta.persistence.EntityManager;
@@ -41,11 +41,11 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 );
 
                 Subquery<Long> sqAccessProfiles = query.subquery(Long.class);
-                Root<AgentXAccessProfileXSystem> aas = sqAccessProfiles.from(AgentXAccessProfileXSystem.class);
+                Root<AgentXAccessProfileXDomain> aas = sqAccessProfiles.from(AgentXAccessProfileXDomain.class);
 
                 sqAccessProfiles.select(aas.get("accessProfileId"));
                 sqAccessProfiles.where(
-                        builder.equal(aas.get("systemId"), resource.get("systemId")),
+                        builder.equal(aas.get("domainId"), resource.get("domainId")),
                         aas.get("agentId").in(agentIds)
                 );
 
@@ -70,7 +70,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
     @Override
     public List<ResourcePermissionView> findResourcePermissions(
-            List<Long> systemIds,
+            List<Long> domainIds,
             List<Long> resourceTypeIds,
             List<Long> accessProfileIds,
             List<Long> agentIds,
@@ -87,8 +87,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         List<Predicate> rootPredicates = new ArrayList<>();
         List<Predicate> joinPredicates = new ArrayList<>();
-        if (systemIds != null && !systemIds.isEmpty()) {
-            rootPredicates.add(r.get("systemId").in(systemIds));
+        if (domainIds != null && !domainIds.isEmpty()) {
+            rootPredicates.add(r.get("domainId").in(domainIds));
         }
         if (resourceTypeIds != null && !resourceTypeIds.isEmpty()) {
             rootPredicates.add(r.get("resourceTypeId").in(resourceTypeIds));
@@ -113,7 +113,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         cq.select(cb.construct(
                 ResourcePermissionView.class, //must maintain same order of fields in class
-                r.get("systemId").alias("resourceSystemId"),
+                r.get("domainId").alias("resourceDomainId"),
                 r.get("id").alias("resourceId"),
                 r.get("parentId").alias("resourceParentId"),
                 r.get("resourceTypeId").alias("resourceTypeId"),
@@ -136,7 +136,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
         cq.where(rootPredicates.toArray(Predicate[]::new));
 
         cq.orderBy(
-                cb.asc(r.get("systemId")),
+                cb.asc(r.get("domainId")),
                 cb.asc(p.get("accessProfileId")),
                 cb.asc(p.get("agentId")),
                 cb.asc(cb.coalesce(
@@ -150,16 +150,16 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
     @Override
     public List<ResourcePermissionView> findResourcePermissions(
-            Long systemId,
+            Long domainId,
             Long resourceTypeId,
             Long accessProfileId,
             Long agentId,
             List<String> resourcePaths,
             JoinType joinType
     ) {
-        List<Long> systemIds = null;
-        if (systemId != null) {
-            systemIds = List.of(systemId);
+        List<Long> domainIds = null;
+        if (domainId != null) {
+            domainIds = List.of(domainId);
         }
         List<Long> resourceTypeIds = null;
         if (resourceTypeId != null) {
@@ -174,12 +174,12 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             agentIds = List.of(agentId);
         }
 
-        return findResourcePermissions(systemIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType);
+        return findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType);
     }
 
     @Override
     public List<ResourcePermissionView> findAlloweds(
-            Long systemId,
+            Long domainId,
             Long resourceTypeId,
             Long accessProfileId,
             Long agentId,
@@ -198,8 +198,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         List<Predicate> rootPredicates = new ArrayList<>();
         List<Predicate> joinPredicates = new ArrayList<>();
-        if (systemId != null) {
-            rootPredicates.add(r.get("systemId").equalTo(systemId));
+        if (domainId != null) {
+            rootPredicates.add(r.get("domainId").equalTo(domainId));
         }
         if (resourceTypeId != null) {
             rootPredicates.add(r.get("resourceTypeId").equalTo(resourceTypeId));
@@ -248,7 +248,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         cq.select(cb.construct(
                 ResourcePermissionView.class, //must maintain same order of fields in class
-                r.get("systemId").alias("resourceSystemId"),
+                r.get("domainId").alias("resourceDomainId"),
                 r.get("id").alias("resourceId"),
                 r.get("parentId").alias("resourceParentId"),
                 r.get("resourceTypeId").alias("resourceTypeId"),
@@ -270,7 +270,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
         cq.where(rootPredicates.toArray(Predicate[]::new));
 
         cq.orderBy(
-                cb.asc(r.get("systemId")),
+                cb.asc(r.get("domainId")),
                 cb.asc(p.get("accessProfileId")),
                 cb.asc(p.get("agentId")),
                 cb.asc(cb.coalesce(

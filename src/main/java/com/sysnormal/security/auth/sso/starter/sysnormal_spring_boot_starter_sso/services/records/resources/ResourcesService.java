@@ -34,7 +34,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
         try {
             logger.debug("getAlloweds with params {}",params);
             JsonNode queryParams = params.path("queryParams");
-            Long systemId = JsonUtils.get(queryParams,"systemId", JsonNode::asLong).orElse(null);
+            Long domainId = JsonUtils.get(queryParams,"domainId", JsonNode::asLong).orElse(null);
             Long resourceTypeId = JsonUtils.get(queryParams,"resourceTypeId", JsonNode::asLong).orElse(null);
             Long accessProfileId = JsonUtils.get(queryParams,"accessProfileId", JsonNode::asLong).orElse(null);
             Long agentId = JsonUtils.get(queryParams,"agentId", JsonNode::asLong).orElse(null);
@@ -44,7 +44,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             Byte allowedChange = queryParams.has("allowedChange") ? JsonUtils.jsonNodeTo01(queryParams.path("allowedChange")) : null;
             Byte allowedDelete = queryParams.has("allowedDelete") ? JsonUtils.jsonNodeTo01(queryParams.path("allowedDelete")) : null;
 
-            result = getAlloweds(systemId,
+            result = getAlloweds(domainId,
                     resourceTypeId,
                     accessProfileId,
                     agentId,
@@ -61,7 +61,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
     };
 
     public DefaultDataSwap getAlloweds(
-            Long systemId,
+            Long domainId,
             Long resourceTypeId,
             Long accessProfileId,
             Long agentId,
@@ -72,11 +72,16 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             Byte allowedDelete
     ){
         logger.debug("INIT {}.{}", this.getClass().getSimpleName(), "get");
-        logger.debug("getAlloweds with systemId {}, resourceTypeId {}, accessProfileId {}, agentId {}",systemId, resourceTypeId, accessProfileId, agentId);
+        logger.debug("getAlloweds with domainId {}, resourceTypeId {}, accessProfileId {}, agentId {}",domainId, resourceTypeId, accessProfileId, agentId);
         DefaultDataSwap result = new DefaultDataSwap();
         try {
+            //never widen to all domains when the domain is not informed: it would leak resources of other domains
+            if (domainId == null) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
+                throw new Exception("missing domainId: it is required to query allowed resources");
+            }
             result.data = repository.findAlloweds(
-                systemId,
+                domainId,
                 resourceTypeId,
                 accessProfileId,
                 agentId,
@@ -101,7 +106,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
 
             Claims claims = authenticationService.getAuthenticatedClaims();//jwtService.getClaims(token);
             Long agentId = authenticationService.getAuthenticatedAgentId();//claims.get("agentId", Long.class);
-            Long systemId = claims.get("systemId", Long.class);
+            Long domainId = claims.get("domainId", Long.class);
             Long accessProfileId = claims.get("accessProfileId", Long.class);
 
             if (agentId == null) {
@@ -112,12 +117,17 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             if (accessProfileId == null) {
                 accessProfileId = JsonUtils.get(queryParams,"accessProfileId", JsonNode::asLong).orElse(null);
             }
-            if (systemId == null) {
-                systemId = JsonUtils.get(queryParams,"systemId", JsonNode::asLong).orElse(null);
+            if (domainId == null) {
+                domainId = JsonUtils.get(queryParams,"domainId", JsonNode::asLong).orElse(null);
+            }
+            //neither the token nor the request informed the domain: refuse instead of returning every domain
+            if (domainId == null) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
+                throw new Exception("missing domainId: it is required to query resource permissions");
             }
             Long resourceTypeId = JsonUtils.get(queryParams,"resourceTypeId", JsonNode::asLong).orElse(null);
             List<String> resourcePaths = JsonUtils.jsonArrayToList(queryParams.path("resourcePaths"), JsonNode::asString);
-            result.data = repository.findResourcePermissions(systemId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER);
+            result.data = repository.findResourcePermissions(domainId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER);
             result.success = true;
         } catch (Exception e) {
             result.setException(e);
@@ -130,11 +140,16 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
         try {
             JsonNode queryParams = params.path("queryParams");
             List<Long> agentIds = JsonUtils.jsonArrayToList(queryParams.path("agentIds"), JsonNode::asLong);
-            List<Long> systemIds = JsonUtils.jsonArrayToList(queryParams.path("systemIds"), JsonNode::asLong);
+            List<Long> domainIds = JsonUtils.jsonArrayToList(queryParams.path("domainIds"), JsonNode::asLong);
+            //without the domain this query returns the whole catalog, of every domain: refuse it
+            if (domainIds == null || domainIds.isEmpty()) {
+                result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
+                throw new Exception("missing domainIds: it is required to query resources with permissions");
+            }
             List<Long> accessProfileIds = JsonUtils.jsonArrayToList(queryParams.path("accessProfileIds"), JsonNode::asLong);
             List<Long> resourceTypeIds = JsonUtils.jsonArrayToList(queryParams.path("resourceTypeIds"), JsonNode::asLong);
             List<String> resourcePaths = JsonUtils.jsonArrayToList(queryParams.path("resourcePaths"), JsonNode::asString);
-            result.data = repository.findResourcePermissions(systemIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT);
+            result.data = repository.findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT);
             result.success = true;
         } catch (Exception e) {
             result.setException(e);

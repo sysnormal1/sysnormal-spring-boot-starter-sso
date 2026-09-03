@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>io.github.sysnormal1.security.auth</groupId>
 			<artifactId>auth-core</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.5-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

@@ -2,7 +2,7 @@ package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_ss
 
 import com.sysnormal.commons.spring.spring_data_utils.JpaReflectionUtils;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.*;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.System;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.Domain;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
@@ -108,82 +108,98 @@ public class V2__Seeder extends BaseJavaMigration {
             }
 
 
-            //SYSTEM_PLATFORMS
+            //DOMAIN_PLATFORMS
             fieldsNames = new String[]{"id", "is_sys_rec", "name", "is_desktop", "is_web", "is_mobile"};
             valuesBinders = new String[]{"?", "?", "?", "?", "?", "?"};
-            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(SystemPlatformType.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(DomainPlatformType.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemPlatformType.DESKTOP_ID);
-                ps.setByte(2, SystemPlatformType.DESKTOP.getIsSysRec());
-                ps.setString(3, SystemPlatformType.DESKTOP.getName());
-                ps.setByte(4, SystemPlatformType.DESKTOP.getIsDesktop());
-                ps.setByte(5, SystemPlatformType.DESKTOP.getIsWeb());
-                ps.setByte(6, SystemPlatformType.DESKTOP.getIsMobile());
+                ps.setLong(1, DomainPlatformType.DESKTOP_ID);
+                ps.setByte(2, DomainPlatformType.DESKTOP.getIsSysRec());
+                ps.setString(3, DomainPlatformType.DESKTOP.getName());
+                ps.setByte(4, DomainPlatformType.DESKTOP.getIsDesktop());
+                ps.setByte(5, DomainPlatformType.DESKTOP.getIsWeb());
+                ps.setByte(6, DomainPlatformType.DESKTOP.getIsMobile());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemPlatformType.WEB_ID);
-                ps.setByte(2, SystemPlatformType.WEB.getIsSysRec());
-                ps.setString(3, SystemPlatformType.WEB.getName());
-                ps.setByte(4, SystemPlatformType.WEB.getIsDesktop());
-                ps.setByte(5, SystemPlatformType.WEB.getIsWeb());
-                ps.setByte(6, SystemPlatformType.WEB.getIsMobile());
+                ps.setLong(1, DomainPlatformType.WEB_ID);
+                ps.setByte(2, DomainPlatformType.WEB.getIsSysRec());
+                ps.setString(3, DomainPlatformType.WEB.getName());
+                ps.setByte(4, DomainPlatformType.WEB.getIsDesktop());
+                ps.setByte(5, DomainPlatformType.WEB.getIsWeb());
+                ps.setByte(6, DomainPlatformType.WEB.getIsMobile());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemPlatformType.MOBILE_ID);
-                ps.setByte(2, SystemPlatformType.MOBILE.getIsSysRec());
-                ps.setString(3, SystemPlatformType.MOBILE.getName());
-                ps.setByte(4, SystemPlatformType.MOBILE.getIsDesktop());
-                ps.setByte(5, SystemPlatformType.MOBILE.getIsWeb());
-                ps.setByte(6, SystemPlatformType.MOBILE.getIsMobile());
+                ps.setLong(1, DomainPlatformType.MOBILE_ID);
+                ps.setByte(2, DomainPlatformType.MOBILE.getIsSysRec());
+                ps.setString(3, DomainPlatformType.MOBILE.getName());
+                ps.setByte(4, DomainPlatformType.MOBILE.getIsDesktop());
+                ps.setByte(5, DomainPlatformType.MOBILE.getIsWeb());
+                ps.setByte(6, DomainPlatformType.MOBILE.getIsMobile());
                 ps.executeUpdate();
             }
 
 
-            //SYSTEM_SIDES
+            //DOMAIN_SIDES
             fieldsNames = new String[]{"id", "is_sys_rec", "name", "is_server", "is_client"};
             valuesBinders = new String[]{"?", "?", "?", "?", "?"};
-            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(SystemSide.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(DomainSide.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemSide.SERVER_SIDE_ID);
-                ps.setByte(2, SystemSide.SERVER_SIDE.getIsSysRec());
-                ps.setString(3, SystemSide.SERVER_SIDE.getName());
-                ps.setByte(4, SystemSide.SERVER_SIDE.getIsServer());
-                ps.setByte(5, SystemSide.SERVER_SIDE.getIsClient());
+                ps.setLong(1, DomainSide.SERVER_SIDE_ID);
+                ps.setByte(2, DomainSide.SERVER_SIDE.getIsSysRec());
+                ps.setString(3, DomainSide.SERVER_SIDE.getName());
+                ps.setByte(4, DomainSide.SERVER_SIDE.getIsServer());
+                ps.setByte(5, DomainSide.SERVER_SIDE.getIsClient());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, SystemSide.CLIENT_SIDE_ID);
-                ps.setByte(2, SystemSide.CLIENT_SIDE.getIsSysRec());
-                ps.setString(3, SystemSide.CLIENT_SIDE.getName());
-                ps.setByte(4, SystemSide.CLIENT_SIDE.getIsServer());
-                ps.setByte(5, SystemSide.CLIENT_SIDE.getIsClient());
+                ps.setLong(1, DomainSide.CLIENT_SIDE_ID);
+                ps.setByte(2, DomainSide.CLIENT_SIDE.getIsSysRec());
+                ps.setString(3, DomainSide.CLIENT_SIDE.getName());
+                ps.setByte(4, DomainSide.CLIENT_SIDE.getIsServer());
+                ps.setByte(5, DomainSide.CLIENT_SIDE.getIsClient());
                 ps.executeUpdate();
             }
 
-            //SYSTEMS
-            fieldsNames = new String[]{"id", "is_sys_rec", "system_platform_id", "system_side_id", "name"};
-            valuesBinders = new String[]{"?", "?", "?", "?", "?"};
-            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(System.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            //DOMAIN_TYPES
+            fieldsNames = new String[]{"id", "is_sys_rec", "name", "description"};
+            valuesBinders = new String[]{"?", "?", "?", "?"};
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(DomainType.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
-            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, System.SSO_SERVER_ID);
-                ps.setByte(2, System.SSO_SERVER.getIsSysRec());
-                ps.setLong(3, System.SSO_SERVER.getSystemPlatformId());
-                ps.setLong(4, System.SSO_SERVER.getSystemSideId());
-                ps.setString(5, System.SSO_SERVER.getName());
-                ps.executeUpdate();
+            for (DomainType domainType : new DomainType[]{
+                    DomainType.ECOSYSTEM,
+                    DomainType.APPLICATION,
+                    DomainType.SERVICE,
+                    DomainType.DATABASE,
+                    DomainType.CLUSTER
+            }) {
+                try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                    ps.setLong(1, domainType.getId());
+                    ps.setByte(2, domainType.getIsSysRec());
+                    ps.setString(3, domainType.getName());
+                    ps.setString(4, domainType.getDescription());
+                    ps.executeUpdate();
+                }
             }
-            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, System.SSO_WEBCLIENT_ID);
-                ps.setByte(2, System.SSO_WEBCLIENT.getIsSysRec());
-                ps.setLong(3, System.SSO_WEBCLIENT.getSystemPlatformId());
-                ps.setLong(4, System.SSO_WEBCLIENT.getSystemSideId());
-                ps.setString(5, System.SSO_WEBCLIENT.getName());
-                ps.executeUpdate();
+
+            //DOMAINS
+            fieldsNames = new String[]{"id", "is_sys_rec", "domain_type_id", "domain_platform_id", "domain_side_id", "name"};
+            valuesBinders = new String[]{"?", "?", "?", "?", "?", "?"};
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(Domain.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            logger.debug("Executing query: {}", query);
+            for (Domain domain : new Domain[]{Domain.SSO_SERVER, Domain.SSO_WEBCLIENT}) {
+                try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                    ps.setLong(1, domain.getId());
+                    ps.setByte(2, domain.getIsSysRec());
+                    ps.setLong(3, domain.getDomainTypeId());
+                    ps.setObject(4, domain.getDomainPlatformId());
+                    ps.setObject(5, domain.getDomainSideId());
+                    ps.setString(6, domain.getName());
+                    ps.executeUpdate();
+                }
             }
 
             //RESOURCE_TYPES
@@ -192,9 +208,9 @@ public class V2__Seeder extends BaseJavaMigration {
             query = "insert ignore into " + JpaReflectionUtils.resolveTableName(ResourceType.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, ResourceType.SYSTEM_ID);
-                ps.setByte(2, ResourceType.SYSTEM.getIsSysRec());
-                ps.setString(3, ResourceType.SYSTEM.getName());
+                ps.setLong(1, ResourceType.DOMAIN_ID);
+                ps.setByte(2, ResourceType.DOMAIN.getIsSysRec());
+                ps.setString(3, ResourceType.DOMAIN.getName());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
@@ -265,29 +281,41 @@ public class V2__Seeder extends BaseJavaMigration {
             }
 
             //RESOURCES
-            fieldsNames = new String[]{"id", "is_sys_rec", "parent_id", "system_id", "resource_type_id", "name", "resource_path", "icon", "numeric_order"};
+            fieldsNames = new String[]{"id", "is_sys_rec", "parent_id", "domain_id", "resource_type_id", "name", "resource_path", "icon", "numeric_order"};
             valuesBinders = new String[]{"?", "?", "?","?", "?", "?","?", "?", "?"};
             query = "insert ignore into " + JpaReflectionUtils.resolveTableName(Resource.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
 
             //SSO WEBCLIENT RESOURCES
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, Resource.SYSTEMS_ID);
-                ps.setByte(2, Resource.SYSTEMS.getIsSysRec());
-                ps.setObject(3, Resource.SYSTEMS.getParentId());
-                ps.setLong(4, Resource.SYSTEMS.getSystemId());
-                ps.setLong(5, Resource.SYSTEMS.getResourceTypeId());
-                ps.setString(6, Resource.SYSTEMS.getName());
-                ps.setString(7, Resource.SYSTEMS.getResourcePath());
-                ps.setString(8, Resource.SYSTEMS.getIcon());
-                ps.setInt(9, Resource.SYSTEMS.getNumericOrder());
+                ps.setLong(1, Resource.DOMAINS_ID);
+                ps.setByte(2, Resource.DOMAINS.getIsSysRec());
+                ps.setObject(3, Resource.DOMAINS.getParentId());
+                ps.setLong(4, Resource.DOMAINS.getDomainId());
+                ps.setLong(5, Resource.DOMAINS.getResourceTypeId());
+                ps.setString(6, Resource.DOMAINS.getName());
+                ps.setString(7, Resource.DOMAINS.getResourcePath());
+                ps.setString(8, Resource.DOMAINS.getIcon());
+                ps.setInt(9, Resource.DOMAINS.getNumericOrder());
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
+                ps.setLong(1, Resource.DOMAIN_TYPES_ID);
+                ps.setByte(2, Resource.DOMAIN_TYPES.getIsSysRec());
+                ps.setObject(3, Resource.DOMAIN_TYPES.getParentId());
+                ps.setLong(4, Resource.DOMAIN_TYPES.getDomainId());
+                ps.setLong(5, Resource.DOMAIN_TYPES.getResourceTypeId());
+                ps.setString(6, Resource.DOMAIN_TYPES.getName());
+                ps.setString(7, Resource.DOMAIN_TYPES.getResourcePath());
+                ps.setString(8, Resource.DOMAIN_TYPES.getIcon());
+                ps.setInt(9, Resource.DOMAIN_TYPES.getNumericOrder());
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
                 ps.setLong(1, Resource.ACCESS_PROFILES_ID);
                 ps.setByte(2, Resource.ACCESS_PROFILES.getIsSysRec());
                 ps.setObject(3, Resource.ACCESS_PROFILES.getParentId());
-                ps.setLong(4, Resource.ACCESS_PROFILES.getSystemId());
+                ps.setLong(4, Resource.ACCESS_PROFILES.getDomainId());
                 ps.setLong(5, Resource.ACCESS_PROFILES.getResourceTypeId());
                 ps.setString(6, Resource.ACCESS_PROFILES.getName());
                 ps.setString(7, Resource.ACCESS_PROFILES.getResourcePath());
@@ -299,7 +327,7 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setLong(1, Resource.AGENTS_ID);
                 ps.setByte(2, Resource.AGENTS.getIsSysRec());
                 ps.setObject(3, Resource.AGENTS.getParentId());
-                ps.setLong(4, Resource.AGENTS.getSystemId());
+                ps.setLong(4, Resource.AGENTS.getDomainId());
                 ps.setLong(5, Resource.AGENTS.getResourceTypeId());
                 ps.setString(6, Resource.AGENTS.getName());
                 ps.setString(7, Resource.AGENTS.getResourcePath());
@@ -311,7 +339,7 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setLong(1, Resource.RESOURCES_ID);
                 ps.setByte(2, Resource.RESOURCES.getIsSysRec());
                 ps.setObject(3, Resource.RESOURCES.getParentId());
-                ps.setLong(4, Resource.RESOURCES.getSystemId());
+                ps.setLong(4, Resource.RESOURCES.getDomainId());
                 ps.setLong(5, Resource.RESOURCES.getResourceTypeId());
                 ps.setString(6, Resource.RESOURCES.getName());
                 ps.setString(7, Resource.RESOURCES.getResourcePath());
@@ -323,7 +351,7 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setLong(1, Resource.RESOURCE_PERMISSIONS_ID);
                 ps.setByte(2, Resource.RESOURCE_PERMISSIONS.getIsSysRec());
                 ps.setObject(3, Resource.RESOURCE_PERMISSIONS.getParentId());
-                ps.setLong(4, Resource.RESOURCE_PERMISSIONS.getSystemId());
+                ps.setLong(4, Resource.RESOURCE_PERMISSIONS.getDomainId());
                 ps.setLong(5, Resource.RESOURCE_PERMISSIONS.getResourceTypeId());
                 ps.setString(6, Resource.RESOURCE_PERMISSIONS.getName());
                 ps.setString(7, Resource.RESOURCE_PERMISSIONS.getResourcePath());
@@ -335,7 +363,7 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.setLong(1, Resource.RELATIONSHIPS_ID);
                 ps.setByte(2, Resource.RELATIONSHIPS.getIsSysRec());
                 ps.setObject(3, Resource.RELATIONSHIPS.getParentId());
-                ps.setLong(4, Resource.RELATIONSHIPS.getSystemId());
+                ps.setLong(4, Resource.RELATIONSHIPS.getDomainId());
                 ps.setLong(5, Resource.RELATIONSHIPS.getResourceTypeId());
                 ps.setString(6, Resource.RELATIONSHIPS.getName());
                 ps.setString(7, Resource.RELATIONSHIPS.getResourcePath());
@@ -344,15 +372,15 @@ public class V2__Seeder extends BaseJavaMigration {
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
-                ps.setLong(1, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID);
-                ps.setByte(2, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getIsSysRec());
-                ps.setObject(3, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getParentId());
-                ps.setLong(4, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getSystemId());
-                ps.setLong(5, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getResourceTypeId());
-                ps.setString(6, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getName());
-                ps.setString(7, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getResourcePath());
-                ps.setString(8, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getIcon());
-                ps.setInt(9, Resource.AGENTS_X_ACCESS_PROFILES_X_SYSTEMS.getNumericOrder());
+                ps.setLong(1, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS_ID);
+                ps.setByte(2, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getIsSysRec());
+                ps.setObject(3, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getParentId());
+                ps.setLong(4, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getDomainId());
+                ps.setLong(5, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getResourceTypeId());
+                ps.setString(6, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getName());
+                ps.setString(7, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getResourcePath());
+                ps.setString(8, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getIcon());
+                ps.setInt(9, Resource.AGENTS_X_ACCESS_PROFILES_X_DOMAINS.getNumericOrder());
                 ps.executeUpdate();
             }
 
@@ -375,16 +403,16 @@ public class V2__Seeder extends BaseJavaMigration {
             }
 
 
-            //AGENTS_X_ACCESS_PROFILES_X_SYSTEMS
-            fieldsNames = new String[]{"is_sys_rec", "agent_id","access_profile_id", "system_id"};
+            //AGENTS_X_ACCESS_PROFILES_X_DOMAINS
+            fieldsNames = new String[]{"is_sys_rec", "agent_id","access_profile_id", "domain_id"};
             valuesBinders = new String[]{"?", "?", "?", "?"};
-            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(AgentXAccessProfileXSystem.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
+            query = "insert ignore into " + JpaReflectionUtils.resolveTableName(AgentXAccessProfileXDomain.class) + "(" + StringUtils.join(fieldsNames) + ") values (" + StringUtils.join(valuesBinders) + ")";
             logger.debug("Executing query: {}", query);
             try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
                 ps.setByte(1, (byte)1);
                 ps.setLong(2, Agent.SYSTEM_ID);
                 ps.setLong(3, AccessProfile.SYSTEM_ID);
-                ps.setLong(4, System.SSO_WEBCLIENT_ID);
+                ps.setLong(4, Domain.SSO_WEBCLIENT_ID);
                 ps.executeUpdate();
             }
 
@@ -395,7 +423,7 @@ public class V2__Seeder extends BaseJavaMigration {
             logger.debug("Executing query: {}", query);
             /*try (PreparedStatement ps = context.getConnection().prepareStatement(query)) {
                 ps.setByte(1, (byte) 1);
-                ps.setLong(2, Resource.SYSTEMS_ID);
+                ps.setLong(2, Resource.DOMAINS_ID);
                 ps.setLong(3, AccessProfile.SYSTEM_ID);
                 ps.executeUpdate();
             }

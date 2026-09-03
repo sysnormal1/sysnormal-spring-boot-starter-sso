@@ -7,7 +7,7 @@ import com.sysnormal.security.auth.auth_core.dtos.AgentAuthDto;
 import com.sysnormal.security.auth.auth_core.dtos.RefreshTokenRequestDTO;
 import com.sysnormal.security.auth.auth_core.dtos.TokenRequestDTO;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.*;
-import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.System;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.Domain;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.repositories.sso.*;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.jwt.JwtSsoProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.security.SecurityProperties;
@@ -53,7 +53,7 @@ public class AuthenticationService {
     private final JwtSsoService jwtSsoService;
 
     @Autowired
-    SystemsRepository systemsRepository;
+    DomainsRepository domainsRepository;
 
     @Autowired
     AccessProfilesRepository accessProfileRepository;
@@ -62,7 +62,7 @@ public class AuthenticationService {
     AgentsRepository agentsRepository;
 
     @Autowired
-    AgentsXAccessProfilesXSystemsRepository agentsXAccessProfilesXSystemsRepository;
+    AgentsXAccessProfilesXDomainsRepository agentsXAccessProfilesXDomainsRepository;
 
     @Autowired
     ResourcePermissionsRepository resourcePermissionsRepository;
@@ -199,6 +199,11 @@ public class AuthenticationService {
                             agentAuthDto.setAgentId(optionalAgent.get().getId());
                             agentAuthDto.setExpiration(jwtSsoProperties.getDefaultTokenExpiration());
 
+                            //agent specific expiration
+                            if (optionalAgent.get().getTokenExpirationTime() != null) {
+                                agentAuthDto.setExpiration(optionalAgent.get().getTokenExpirationTime());
+                            }
+
                             ObjectNode queryParams = objectMapper.createObjectNode();
                             ObjectNode where = queryParams.putObject("where");
                             where.put("agentId", agentAuthDto.getAgentId());
@@ -213,19 +218,19 @@ public class AuthenticationService {
                                 where.put("accessProfileId", agentAuthDto.getAccessProfileId());
                             }
 
-                            //check if system exists
-                            if (agentAuthDto.getSystemId() != null) {
-                                Optional<System> optionalSystem = systemsRepository.findById(agentAuthDto.getSystemId());
-                                if (optionalSystem.isEmpty()) {
+                            //check if domain exists
+                            if (agentAuthDto.getDomainId() != null) {
+                                Optional<Domain> optionalDomain = domainsRepository.findById(agentAuthDto.getDomainId());
+                                if (optionalDomain.isEmpty()) {
                                     result.httpStatusCode = HttpStatus.UNAUTHORIZED.value();
-                                    throw new Exception("system not found");
+                                    throw new Exception("domain not found");
                                 }
-                                where.put("systemId", agentAuthDto.getSystemId());
+                                where.put("domainId", agentAuthDto.getDomainId());
                             }
 
                             boolean agentHasRelations = true;
                             if (where.size() > 1) {
-                                agentHasRelations = agentsXAccessProfilesXSystemsRepository.exists(DatabaseUtils.fromWhere(queryParams));
+                                agentHasRelations = agentsXAccessProfilesXDomainsRepository.exists(DatabaseUtils.fromWhere(where));
                             }
 
                             if (agentHasRelations) {
@@ -240,7 +245,7 @@ public class AuthenticationService {
                                 );
                             } else {
                                 result.httpStatusCode = HttpStatus.EXPECTATION_FAILED.value();
-                                result.message = "agent has not relationed to specified system or access profile";
+                                result.message = "agent has not relationed to specified domain or access profile";
                             }
 
                         } else {
@@ -326,13 +331,13 @@ public class AuthenticationService {
                                 agentsRepository.save(newAgent);
                                 result = getAuthDataResult(agentAuthDto, agentsRepository.findByIdentifierTypeIdAndIdentifier(newAgent.getIdentifierTypeId(), newAgent.getIdentifier()), false, null, true, null);
 
-                                //register relationed system to user
-                                if (result.success && agentAuthDto.getSystemId() != null) {
-                                    AgentXAccessProfileXSystem agentXAccessProfileXSystem = new AgentXAccessProfileXSystem();
-                                    agentXAccessProfileXSystem.setAgentId(newAgent.getId());
-                                    agentXAccessProfileXSystem.setAccessProfileId(AccessProfile.DEFAULT_ID);
-                                    agentXAccessProfileXSystem.setSystemId(agentAuthDto.getSystemId());
-                                    agentsXAccessProfilesXSystemsRepository.save(agentXAccessProfileXSystem);
+                                //register relationed domain to user
+                                if (result.success && agentAuthDto.getDomainId() != null) {
+                                    AgentXAccessProfileXDomain agentXAccessProfileXDomain = new AgentXAccessProfileXDomain();
+                                    agentXAccessProfileXDomain.setAgentId(newAgent.getId());
+                                    agentXAccessProfileXDomain.setAccessProfileId(AccessProfile.DEFAULT_ID);
+                                    agentXAccessProfileXDomain.setDomainId(agentAuthDto.getDomainId());
+                                    agentsXAccessProfilesXDomainsRepository.save(agentXAccessProfileXDomain);
                                 }
                             }
                         } else {
@@ -431,6 +436,8 @@ public class AuthenticationService {
                             String subject = "Password Recover";
                             String text = "Follow this link to create a new password: " + agentAuthDto.getPasswordChangeInterfacePath() + "/" + agent.get().getLastPasswordChangeToken();
                             String html = "Follow this link to create a new password: <br /><a href=\"" + agentAuthDto.getPasswordChangeInterfacePath() + "/" + agent.get().getLastPasswordChangeToken() + "\">Change password</a>";
+
+                            logger.debug("text {}, html {}", text, html);
 
                             mailService.sendEmail(email, subject, text, html);
 

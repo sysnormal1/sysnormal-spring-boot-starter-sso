@@ -13,10 +13,10 @@ import org.hibernate.annotations.ColumnDefault;
 @Setter
 @Entity
 @Table(
-        name = "system_sides",
+        name = "domain_sides",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "system_sides_u1",
+                        name = "domain_sides_u1",
                         columnNames = {
                                 "(coalesce(parent_id, -1))","record_status_id",
                                 "name"
@@ -24,7 +24,7 @@ import org.hibernate.annotations.ColumnDefault;
                 )
         }
 )
-public class SystemSide extends BaseSsoEntity<SystemSide> {
+public class DomainSide extends BaseSsoEntity<DomainSide> {
 
     @Column(name = "name", nullable = false, length = 127)
     private String name;
@@ -49,21 +49,21 @@ public class SystemSide extends BaseSsoEntity<SystemSide> {
     public static final long SERVER_SIDE_ID = 1;
     public static final long CLIENT_SIDE_ID = 2;
 
-    public static final SystemSide SERVER_SIDE = new SystemSide(){{
+    public static final DomainSide SERVER_SIDE = new DomainSide(){{
         setId(SERVER_SIDE_ID);
         setIsSysRec((byte) 1);
         setName("SERVER SIDE");
         setIsServer((byte) 1);
     }};
 
-    public static final SystemSide CLIENT_SIDE = new SystemSide(){{
+    public static final DomainSide CLIENT_SIDE = new DomainSide(){{
         setId(CLIENT_SIDE_ID);
         setIsSysRec((byte) 1);
         setName("CLIENT SIDE");
         setIsClient((byte) 1);
     }};
 
-    public static final SystemSide WITHOUT_SIDE = new SystemSide(){{
+    public static final DomainSide WITHOUT_SIDE = new DomainSide(){{
         setId(WITHOUT_SIDE_ID);
         setIsSysRec((byte) 1);
         setName("WITHOUT SIDE");

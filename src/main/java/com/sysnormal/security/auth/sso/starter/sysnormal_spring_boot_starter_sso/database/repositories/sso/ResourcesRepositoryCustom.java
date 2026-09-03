@@ -7,7 +7,7 @@ import java.util.List;
 public interface ResourcesRepositoryCustom {
 
     List<ResourcePermissionView> findResourcePermissions(
-            Long systemId,
+            Long domainId,
             Long resourceTypeId,
             Long accessProfileId,
             Long agentId,
@@ -16,7 +16,7 @@ public interface ResourcesRepositoryCustom {
     );
 
     List<ResourcePermissionView> findResourcePermissions(
-            List<Long> systemIds,
+            List<Long> domainIds,
             List<Long> resourceTypeIds,
             List<Long> accessProfileIds,
             List<Long> agentIds,
@@ -25,7 +25,7 @@ public interface ResourcesRepositoryCustom {
     );
 
     List<ResourcePermissionView> findAlloweds(
-            Long systemId,
+            Long domainId,
             Long resourceTypeId,
             Long accessProfileId,
             Long agentId,

@@ -13,10 +13,10 @@ import org.hibernate.annotations.ColumnDefault;
 @Setter
 @Entity
 @Table(
-        name = "system_platform_types",
+        name = "domain_platform_types",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "system_platform_types_u1",
+                        name = "domain_platform_types_u1",
                         columnNames = {
                                 "(coalesce(parent_id, -1))","record_status_id",
                                 "name"
@@ -24,7 +24,7 @@ import org.hibernate.annotations.ColumnDefault;
                 )
         }
 )
-public class SystemPlatformType extends BaseSsoEntity<SystemPlatformType> {
+public class DomainPlatformType extends BaseSsoEntity<DomainPlatformType> {
 
     @Column(name = "name", nullable = false, length = 127)
     private String name;
@@ -55,21 +55,21 @@ public class SystemPlatformType extends BaseSsoEntity<SystemPlatformType> {
     public static final long WEB_ID = 2;
     public static final long MOBILE_ID = 3;
 
-    public static final SystemPlatformType DESKTOP = new SystemPlatformType(){{
+    public static final DomainPlatformType DESKTOP = new DomainPlatformType(){{
         setId(DESKTOP_ID);
         setIsSysRec((byte) 1);
         setName("DESKTOP");
         setIsDesktop((byte) 1);
     }};
 
-    public static final SystemPlatformType WEB = new SystemPlatformType(){{
+    public static final DomainPlatformType WEB = new DomainPlatformType(){{
         setId(WEB_ID);
         setIsSysRec((byte) 1);
         setName("WEB");
         setIsWeb((byte) 1);
     }};
 
-    public static final SystemPlatformType MOBILE = new SystemPlatformType(){{
+    public static final DomainPlatformType MOBILE = new DomainPlatformType(){{
         setId(MOBILE_ID);
         setIsSysRec((byte) 1);
         setName("MOBILE");

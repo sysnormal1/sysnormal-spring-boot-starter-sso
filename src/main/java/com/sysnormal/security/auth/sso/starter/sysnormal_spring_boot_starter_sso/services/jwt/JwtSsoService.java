@@ -86,15 +86,15 @@ public class JwtSsoService extends JwtSsoClientProtectorService {
             return null;
         }
 
-        /*@TODO - 2026-03-04 - track origin of informations (systemId and accessProfileId) in ascendent calls of this method and set in agentAuthDto if not setted*/
-        logger.debug("creating token for agent {}, identifier {}, systemId {}, accessProfileId {}, expiration {}",
-                agentAuthDto.getAgentId(), agentAuthDto.getIdentifier(), agentAuthDto.getSystemId(), agentAuthDto.getAccessProfileId(), agentAuthDto.getExpiration());
+        /*@TODO - 2026-03-04 - track origin of informations (domainId and accessProfileId) in ascendent calls of this method and set in agentAuthDto if not setted*/
+        logger.debug("creating token for agent {}, identifier {}, domainId {}, accessProfileId {}, expiration {}",
+                agentAuthDto.getAgentId(), agentAuthDto.getIdentifier(), agentAuthDto.getDomainId(), agentAuthDto.getAccessProfileId(), agentAuthDto.getExpiration());
 
         JwtBuilder jwtBuilder = Jwts.builder()
                 .signWith(this.privateKey, Jwts.SIG.RS256)
                 .subject(String.valueOf(agentAuthDto.getAgentId()))
                 .claim("agentId", agentAuthDto.getAgentId())
-                .claim("systemId", agentAuthDto.getSystemId())
+                .claim("domainId", agentAuthDto.getDomainId())
                 .issuedAt(new Date());
 
         // claim opcional

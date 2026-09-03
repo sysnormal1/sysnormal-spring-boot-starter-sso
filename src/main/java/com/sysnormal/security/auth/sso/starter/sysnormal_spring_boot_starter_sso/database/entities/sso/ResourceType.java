@@ -33,7 +33,7 @@ public class ResourceType extends BaseSsoEntity<ResourceType> {
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;
 
-    public static final long SYSTEM_ID = 1;
+    public static final long DOMAIN_ID = 1;
     public static final long DATA_ID = 2;
     public static final long TABLE_RESOURCE_ID = 3;
     public static final long COLUMN_ID = 4;
@@ -46,10 +46,10 @@ public class ResourceType extends BaseSsoEntity<ResourceType> {
     public static final long SCREEN_ID = 11;
     public static final long COMPONENT_ID = 12;
 
-    public static  final ResourceType SYSTEM = new ResourceType(){{
-        setId(SYSTEM_ID);
+    public static  final ResourceType DOMAIN = new ResourceType(){{
+        setId(DOMAIN_ID);
         setIsSysRec((byte) 1);
-        setName("SYSTEM");
+        setName("DOMAIN");
     }};
 
     public static  final ResourceType DATA = new ResourceType(){{

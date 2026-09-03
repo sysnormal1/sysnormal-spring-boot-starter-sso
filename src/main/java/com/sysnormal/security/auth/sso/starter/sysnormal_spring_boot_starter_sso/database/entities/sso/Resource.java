@@ -21,7 +21,7 @@ import java.util.List;
                         name = "resources_u1",
                         columnNames = {
                                 "(coalesce(parent_id, -1))","record_status_id",
-                                "system_id",
+                                "domain_id",
                                 "resource_type_id",
                                 "name"
                         }
@@ -30,8 +30,8 @@ import java.util.List;
 )
 public class Resource extends BaseSsoEntity<Resource> {
 
-    @Column(name = "system_id", nullable = false)
-    private Long systemId;
+    @Column(name = "domain_id", nullable = false)
+    private Long domainId;
 
     @Column(name = "resource_type_id", nullable = false)
     private Long resourceTypeId;
@@ -64,10 +64,10 @@ public class Resource extends BaseSsoEntity<Resource> {
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "system_id", insertable = false, updatable = false)
+    @JoinColumn(name = "domain_id", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private System system;
+    private Domain domain;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "resource_type_id", insertable = false, updatable = false)
@@ -81,28 +81,39 @@ public class Resource extends BaseSsoEntity<Resource> {
 
 
 
-    public static final long SYSTEMS_ID = 10;
+    public static final long DOMAINS_ID = 10;
+    public static final long DOMAIN_TYPES_ID = 11;
     public static final long ACCESS_PROFILES_ID = 15;
     public static final long AGENTS_ID = 20;
     public static final long RESOURCES_ID = 25;
     public static final long RESOURCE_PERMISSIONS_ID = 30;
     public static final long RELATIONSHIPS_ID = 40;
-    public static final long AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID = 41;
+    public static final long AGENTS_X_ACCESS_PROFILES_X_DOMAINS_ID = 41;
 
-    public static  final Resource SYSTEMS = new Resource(){{
-        setId(SYSTEMS_ID);
+    public static  final Resource DOMAINS = new Resource(){{
+        setId(DOMAINS_ID);
         setIsSysRec((byte) 1);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
-        setName("SYSTEMS");
-        setResourcePath("/records/systems");
-        setNumericOrder(Integer.valueOf(String.valueOf(SYSTEMS_ID)));
+        setName("DOMAINS");
+        setResourcePath("/records/domains");
+        setNumericOrder(Integer.valueOf(String.valueOf(DOMAINS_ID)));
+    }};
+
+    public static  final Resource DOMAIN_TYPES = new Resource(){{
+        setId(DOMAIN_TYPES_ID);
+        setIsSysRec((byte) 1);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
+        setResourceTypeId(ResourceType.URL_ID);
+        setName("DOMAIN_TYPES");
+        setResourcePath("/records/domain_types");
+        setNumericOrder(Integer.valueOf(String.valueOf(DOMAIN_TYPES_ID)));
     }};
 
     public static  final Resource ACCESS_PROFILES = new Resource(){{
         setId(ACCESS_PROFILES_ID);
         setIsSysRec((byte) 1);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
         setName("ACCESS_PROFILES");
         setResourcePath("/records/access_profiles");
@@ -112,7 +123,7 @@ public class Resource extends BaseSsoEntity<Resource> {
     public static  final Resource AGENTS = new Resource(){{
         setId(AGENTS_ID);
         setIsSysRec((byte) 1);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
         setName("AGENTS");
         setResourcePath("/records/agents");
@@ -122,7 +133,7 @@ public class Resource extends BaseSsoEntity<Resource> {
     public static  final Resource RESOURCES = new Resource(){{
         setId(RESOURCES_ID);
         setIsSysRec((byte) 1);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
         setName("RESOURCES");
         setResourcePath("/records/resources");
@@ -132,7 +143,7 @@ public class Resource extends BaseSsoEntity<Resource> {
     public static  final Resource RESOURCE_PERMISSIONS = new Resource(){{
         setId(RESOURCE_PERMISSIONS_ID);
         setIsSysRec((byte) 1);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
         setName("RESOURCE_PERMISSIONS");
         setResourcePath("/records/resource_permissions");
@@ -142,22 +153,22 @@ public class Resource extends BaseSsoEntity<Resource> {
     public static  final Resource RELATIONSHIPS = new Resource(){{
         setId(RELATIONSHIPS_ID);
         setIsSysRec((byte) 1);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
         setName("RELATIONSHIPS");
         setResourcePath("/records/relationships");
         setNumericOrder(Integer.valueOf(String.valueOf(RELATIONSHIPS_ID)));
     }};
 
-    public static  final Resource AGENTS_X_ACCESS_PROFILES_X_SYSTEMS = new Resource(){{
-        setId(AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID);
+    public static  final Resource AGENTS_X_ACCESS_PROFILES_X_DOMAINS = new Resource(){{
+        setId(AGENTS_X_ACCESS_PROFILES_X_DOMAINS_ID);
         setIsSysRec((byte) 1);
         setParentId(RELATIONSHIPS_ID);
-        setSystemId(System.SSO_WEBCLIENT_ID);
+        setDomainId(Domain.SSO_WEBCLIENT_ID);
         setResourceTypeId(ResourceType.URL_ID);
-        setName("AGENTS_X_ACCESS_PROFILES_X_SYSTEMS");
-        setResourcePath("/records/relationships/agents_x_access_profiles_x_systems");
-        setNumericOrder(Integer.valueOf(String.valueOf(AGENTS_X_ACCESS_PROFILES_X_SYSTEMS_ID)));
+        setName("AGENTS_X_ACCESS_PROFILES_X_DOMAINS");
+        setResourcePath("/records/relationships/agents_x_access_profiles_x_domains");
+        setNumericOrder(Integer.valueOf(String.valueOf(AGENTS_X_ACCESS_PROFILES_X_DOMAINS_ID)));
     }};
 
 
