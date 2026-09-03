@@ -8,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +69,41 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
         }
     }
 
+    /*
+     * Hides what was revoked and what is out of the validity window, unless the caller asked otherwise.
+     *
+     * The predicate of the RESOURCE goes to the where, the one of the PERMISSION goes to the join.
+     * In getWithPermissions the join is LEFT on purpose - to list a resource with no grant at all - and a
+     * where over a column of the right side would degrade that LEFT into an INNER, dropping exactly the
+     * resources the administration screen needs to show.
+     */
+    public void getVisibilityPredicates(
+            CriteriaBuilder builder,
+            Root<Resource> resource,
+            Join<Resource, ResourcePermission> joinPermission,
+            List<Predicate> rootPredicates,
+            List<Predicate> joinPredicates,
+            boolean includeDeleted,
+            boolean includeExpired
+    ) {
+        if (!includeDeleted) {
+            rootPredicates.add(builder.isNull(resource.get("deletedAt")));
+            joinPredicates.add(builder.isNull(joinPermission.get("deletedAt")));
+        }
+        if (!includeExpired) {
+            LocalDateTime now = LocalDateTime.now();
+            //null on either end means no limit on that side
+            joinPredicates.add(builder.or(
+                    builder.isNull(joinPermission.get("startAt")),
+                    builder.lessThanOrEqualTo(joinPermission.<LocalDateTime>get("startAt"), now)
+            ));
+            joinPredicates.add(builder.or(
+                    builder.isNull(joinPermission.get("endAt")),
+                    builder.greaterThanOrEqualTo(joinPermission.<LocalDateTime>get("endAt"), now)
+            ));
+        }
+    }
+
     @Override
     public List<ResourcePermissionView> findResourcePermissions(
             List<Long> domainIds,
@@ -75,7 +111,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             List<Long> accessProfileIds,
             List<Long> agentIds,
             List<String> resourcePaths,
-            JoinType joinType
+            JoinType joinType,
+            boolean includeDeleted,
+            boolean includeExpired
     ) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -104,6 +142,16 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 accessProfileIds
         );
 
+        getVisibilityPredicates(
+                cb,
+                r,
+                p,
+                rootPredicates,
+                joinPredicates,
+                includeDeleted,
+                includeExpired
+        );
+
         if (resourcePaths != null && !resourcePaths.isEmpty()) {
             rootPredicates.add(r.get("resourcePath").in(resourcePaths));
         }
@@ -129,7 +177,11 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 p.get("allowedView").alias("resourcePermissionAllowedView"),
                 p.get("allowedCreate").alias("resourcePermissionAllowedCreate"),
                 p.get("allowedChange").alias("resourcePermissionAllowedChange"),
-                p.get("allowedDelete").alias("resourcePermissionAllowedDelete")
+                p.get("allowedDelete").alias("resourcePermissionAllowedDelete"),
+                r.get("deletedAt").alias("resourceDeletedAt"),
+                p.get("deletedAt").alias("resourcePermissionDeletedAt"),
+                p.get("startAt").alias("resourcePermissionStartAt"),
+                p.get("endAt").alias("resourcePermissionEndAt")
 
         ));
 
@@ -155,7 +207,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             Long accessProfileId,
             Long agentId,
             List<String> resourcePaths,
-            JoinType joinType
+            JoinType joinType,
+            boolean includeDeleted,
+            boolean includeExpired
     ) {
         List<Long> domainIds = null;
         if (domainId != null) {
@@ -174,7 +228,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             agentIds = List.of(agentId);
         }
 
-        return findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType);
+        return findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType, includeDeleted, includeExpired);
     }
 
     @Override
@@ -187,7 +241,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             Byte allowedView,
             Byte allowedCreate,
             Byte allowedChange,
-            Byte allowedDelete
+            Byte allowedDelete,
+            boolean includeDeleted,
+            boolean includeExpired
     ) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ResourcePermissionView> cq = cb.createQuery(ResourcePermissionView.class);
@@ -222,6 +278,16 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 joinPredicates,
                 agentIds,
                 accessProfileIds
+        );
+
+        getVisibilityPredicates(
+                cb,
+                r,
+                p,
+                rootPredicates,
+                joinPredicates,
+                includeDeleted,
+                includeExpired
         );
 
 
@@ -264,7 +330,11 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 p.get("allowedView").alias("resourcePermissionAllowedView"),
                 p.get("allowedCreate").alias("resourcePermissionAllowedCreate"),
                 p.get("allowedChange").alias("resourcePermissionAllowedChange"),
-                p.get("allowedDelete").alias("resourcePermissionAllowedDelete")
+                p.get("allowedDelete").alias("resourcePermissionAllowedDelete"),
+                r.get("deletedAt").alias("resourceDeletedAt"),
+                p.get("deletedAt").alias("resourcePermissionDeletedAt"),
+                p.get("startAt").alias("resourcePermissionStartAt"),
+                p.get("endAt").alias("resourcePermissionEndAt")
         ));
 
         cq.where(rootPredicates.toArray(Predicate[]::new));
