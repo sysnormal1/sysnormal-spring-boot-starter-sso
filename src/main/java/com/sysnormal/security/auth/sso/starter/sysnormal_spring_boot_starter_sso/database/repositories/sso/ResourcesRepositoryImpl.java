@@ -53,6 +53,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 Predicate agentMatch = joinPermission.get("agentId").in(agentIds);
 
                 Predicate profileFallback = builder.and(
+                        //a grant nominal to someone else is not mine, even when it carries a profile i also have:
+                        //without this the agent_id of the row is never looked at on this branch, and the grant leaks
+                        joinPermission.get("agentId").isNull(),
                         builder.not(builder.exists(sqAgentPermission)),
                         joinPermission.get("accessProfileId").in(sqAccessProfiles)
                 );
