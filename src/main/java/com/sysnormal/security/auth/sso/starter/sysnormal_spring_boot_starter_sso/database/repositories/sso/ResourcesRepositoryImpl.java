@@ -184,7 +184,12 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 r.get("deletedAt").alias("resourceDeletedAt"),
                 p.get("deletedAt").alias("resourcePermissionDeletedAt"),
                 p.get("startAt").alias("resourcePermissionStartAt"),
-                p.get("endAt").alias("resourcePermissionEndAt")
+                p.get("endAt").alias("resourcePermissionEndAt"),
+                r.get("idAtOrigin").alias("resourceIdAtOrigin"),
+                r.get("description").alias("resourceDescription"),
+                r.get("jsonData").alias("resourceJsonData"),
+                p.get("condition").alias("resourcePermissionCondition"),
+                p.get("jsonData").alias("resourcePermissionJsonData")
 
         ));
 
@@ -337,7 +342,12 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 r.get("deletedAt").alias("resourceDeletedAt"),
                 p.get("deletedAt").alias("resourcePermissionDeletedAt"),
                 p.get("startAt").alias("resourcePermissionStartAt"),
-                p.get("endAt").alias("resourcePermissionEndAt")
+                p.get("endAt").alias("resourcePermissionEndAt"),
+                r.get("idAtOrigin").alias("resourceIdAtOrigin"),
+                r.get("description").alias("resourceDescription"),
+                r.get("jsonData").alias("resourceJsonData"),
+                p.get("condition").alias("resourcePermissionCondition"),
+                p.get("jsonData").alias("resourcePermissionJsonData")
         ));
 
         cq.where(rootPredicates.toArray(Predicate[]::new));
