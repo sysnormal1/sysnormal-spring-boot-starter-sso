@@ -45,6 +45,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             Byte allowedDelete = queryParams.has("allowedDelete") ? JsonUtils.jsonNodeTo01(queryParams.path("allowedDelete")) : null;
             boolean includeDeleted = JsonUtils.jsonNodeTo01(queryParams.path("includeDeleted")) == 1;
             boolean includeExpired = JsonUtils.jsonNodeTo01(queryParams.path("includeExpired")) == 1;
+            boolean includeInactive = JsonUtils.jsonNodeTo01(queryParams.path("includeInactive")) == 1;
 
             result = getAlloweds(domainId,
                     resourceTypeId,
@@ -56,7 +57,8 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
                     allowedChange,
                     allowedDelete,
                     includeDeleted,
-                    includeExpired
+                    includeExpired,
+                    includeInactive
             );
         } catch (Exception e) {
             result.setException(e);
@@ -75,11 +77,12 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             Byte allowedChange,
             Byte allowedDelete,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     ){
         logger.debug("INIT {}.{}", this.getClass().getSimpleName(), "get");
         logger.debug("getAlloweds with domainId {}, resourceTypeId {}, accessProfileId {}, agentId {}",domainId, resourceTypeId, accessProfileId, agentId);
-        logger.debug("getAlloweds with includeDeleted {}, includeExpired {}", includeDeleted, includeExpired);
+        logger.debug("getAlloweds with includeDeleted {}, includeExpired {}, includeInactive {}", includeDeleted, includeExpired, includeInactive);
         DefaultDataSwap result = new DefaultDataSwap();
         try {
             //never widen to all domains when the domain is not informed: it would leak resources of other domains
@@ -98,7 +101,8 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
                 allowedChange,
                 allowedDelete,
                 includeDeleted,
-                includeExpired
+                includeExpired,
+                includeInactive
             );
             result.success = true;
         } catch (Exception e) {
@@ -138,7 +142,8 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             List<String> resourcePaths = JsonUtils.jsonArrayToList(queryParams.path("resourcePaths"), JsonNode::asString);
             boolean includeDeleted = JsonUtils.jsonNodeTo01(queryParams.path("includeDeleted")) == 1;
             boolean includeExpired = JsonUtils.jsonNodeTo01(queryParams.path("includeExpired")) == 1;
-            result.data = repository.findResourcePermissions(domainId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER, includeDeleted, includeExpired);
+            boolean includeInactive = JsonUtils.jsonNodeTo01(queryParams.path("includeInactive")) == 1;
+            result.data = repository.findResourcePermissions(domainId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER, includeDeleted, includeExpired, includeInactive);
             result.success = true;
         } catch (Exception e) {
             result.setException(e);
@@ -162,7 +167,8 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             List<String> resourcePaths = JsonUtils.jsonArrayToList(queryParams.path("resourcePaths"), JsonNode::asString);
             boolean includeDeleted = JsonUtils.jsonNodeTo01(queryParams.path("includeDeleted")) == 1;
             boolean includeExpired = JsonUtils.jsonNodeTo01(queryParams.path("includeExpired")) == 1;
-            result.data = repository.findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT, includeDeleted, includeExpired);
+            boolean includeInactive = JsonUtils.jsonNodeTo01(queryParams.path("includeInactive")) == 1;
+            result.data = repository.findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT, includeDeleted, includeExpired, includeInactive);
             result.success = true;
         } catch (Exception e) {
             result.setException(e);

@@ -2,6 +2,7 @@ package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_ss
 
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.AgentXAccessProfileXDomain;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.Resource;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.RecordStatus;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.ResourcePermission;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -73,7 +74,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
     }
 
     /*
-     * Hides what was revoked and what is out of the validity window, unless the caller asked otherwise.
+     * Hides what was revoked, what is out of the validity window and what is not in an active status,
+     * unless the caller asked otherwise.
      *
      * The predicate of the RESOURCE goes to the where, the one of the PERMISSION goes to the join.
      * In getWithPermissions the join is LEFT on purpose - to list a resource with no grant at all - and a
@@ -82,12 +84,14 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
      */
     public void getVisibilityPredicates(
             CriteriaBuilder builder,
+            CriteriaQuery<ResourcePermissionView> query,
             Root<Resource> resource,
             Join<Resource, ResourcePermission> joinPermission,
             List<Predicate> rootPredicates,
             List<Predicate> joinPredicates,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     ) {
         if (!includeDeleted) {
             rootPredicates.add(builder.isNull(resource.get("deletedAt")));
@@ -105,6 +109,35 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                     builder.greaterThanOrEqualTo(joinPermission.<LocalDateTime>get("endAt"), now)
             ));
         }
+        if (!includeInactive) {
+            rootPredicates.add(resource.get("recordStatusId").in(activeRecordStatusIds(builder, query)));
+            joinPredicates.add(joinPermission.get("recordStatusId").in(activeRecordStatusIds(builder, query)));
+        }
+    }
+
+    /*
+     * The ids of record_status that count as active.
+     *
+     * By is_active, and not by record_status_id = ACTIVE_ID: the status table is open to new rows, and a
+     * status added later and flagged active would be hidden by a hardcoded id - silently, since a resource
+     * that stops being returned looks the same as a resource nobody granted.
+     *
+     * A subquery, and not the recordStatus association of BaseSsoEntity: navigating the association would
+     * make Hibernate add an implicit join, and an implicit join hanging off the permission side would
+     * degrade the LEFT join of getWithPermissions into an INNER one. record_status has two rows, so the
+     * subquery costs nothing.
+     */
+    private Subquery<Long> activeRecordStatusIds(
+            CriteriaBuilder builder,
+            CriteriaQuery<ResourcePermissionView> query
+    ) {
+        Subquery<Long> sqActiveStatus = query.subquery(Long.class);
+        Root<RecordStatus> rs = sqActiveStatus.from(RecordStatus.class);
+
+        sqActiveStatus.select(rs.<Long>get("id"));
+        sqActiveStatus.where(builder.equal(rs.get("isActive"), (byte) 1));
+
+        return sqActiveStatus;
     }
 
     @Override
@@ -116,7 +149,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             List<String> resourcePaths,
             JoinType joinType,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     ) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -147,12 +181,14 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         getVisibilityPredicates(
                 cb,
+                cq,
                 r,
                 p,
                 rootPredicates,
                 joinPredicates,
                 includeDeleted,
-                includeExpired
+                includeExpired,
+                includeInactive
         );
 
         if (resourcePaths != null && !resourcePaths.isEmpty()) {
@@ -189,7 +225,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 r.get("description").alias("resourceDescription"),
                 r.get("jsonData").alias("resourceJsonData"),
                 p.get("condition").alias("resourcePermissionCondition"),
-                p.get("jsonData").alias("resourcePermissionJsonData")
+                p.get("jsonData").alias("resourcePermissionJsonData"),
+                r.get("recordStatusId").alias("resourceRecordStatusId"),
+                p.get("recordStatusId").alias("resourcePermissionRecordStatusId")
 
         ));
 
@@ -217,7 +255,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             List<String> resourcePaths,
             JoinType joinType,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     ) {
         List<Long> domainIds = null;
         if (domainId != null) {
@@ -236,7 +275,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             agentIds = List.of(agentId);
         }
 
-        return findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType, includeDeleted, includeExpired);
+        return findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, joinType, includeDeleted, includeExpired, includeInactive);
     }
 
     @Override
@@ -251,7 +290,8 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
             Byte allowedChange,
             Byte allowedDelete,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     ) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ResourcePermissionView> cq = cb.createQuery(ResourcePermissionView.class);
@@ -290,12 +330,14 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
 
         getVisibilityPredicates(
                 cb,
+                cq,
                 r,
                 p,
                 rootPredicates,
                 joinPredicates,
                 includeDeleted,
-                includeExpired
+                includeExpired,
+                includeInactive
         );
 
 
@@ -347,7 +389,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepositoryCustom {
                 r.get("description").alias("resourceDescription"),
                 r.get("jsonData").alias("resourceJsonData"),
                 p.get("condition").alias("resourcePermissionCondition"),
-                p.get("jsonData").alias("resourcePermissionJsonData")
+                p.get("jsonData").alias("resourcePermissionJsonData"),
+                r.get("recordStatusId").alias("resourceRecordStatusId"),
+                p.get("recordStatusId").alias("resourcePermissionRecordStatusId")
         ));
 
         cq.where(rootPredicates.toArray(Predicate[]::new));

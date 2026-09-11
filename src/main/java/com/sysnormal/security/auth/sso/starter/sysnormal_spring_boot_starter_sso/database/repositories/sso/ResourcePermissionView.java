@@ -45,5 +45,13 @@ public record ResourcePermissionView(
         String resourceDescription,
         String resourceJsonData,
         String resourcePermissionCondition,
-        String resourcePermissionJsonData
+        String resourcePermissionJsonData,
+
+        /*
+         * Same reason as the four state columns above: record_status became a filter with an escape, so it
+         * is state and not audit trivia. Asking for the inactive ones and not being able to tell which is
+         * which would be no better than not being able to ask.
+         */
+        Long resourceRecordStatusId,
+        Long resourcePermissionRecordStatusId
 ) {}

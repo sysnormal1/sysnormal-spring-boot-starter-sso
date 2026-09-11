@@ -9,7 +9,10 @@ public interface ResourcesRepositoryCustom {
     /*
      * includeDeleted: also brings the rows with deleted_at filled, of the resource or of the permission
      * includeExpired: also brings the rows outside the start_at / end_at window
-     * Both default to false at the caller: a revoked grant must not reach who asked for what is allowed.
+     * includeInactive: also brings the rows whose record_status is not flagged active
+     *
+     * All three default to false at the caller: a grant that was revoked, that expired or that was
+     * deactivated must not reach who asked for what is allowed.
      */
 
     List<ResourcePermissionView> findResourcePermissions(
@@ -20,7 +23,8 @@ public interface ResourcesRepositoryCustom {
             List<String> resourcePaths,
             JoinType joinType,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     );
 
     List<ResourcePermissionView> findResourcePermissions(
@@ -31,7 +35,8 @@ public interface ResourcesRepositoryCustom {
             List<String> resourcePaths,
             JoinType joinType,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     );
 
     List<ResourcePermissionView> findAlloweds(
@@ -45,6 +50,7 @@ public interface ResourcesRepositoryCustom {
             Byte allowedChange,
             Byte allowedDelete,
             boolean includeDeleted,
-            boolean includeExpired
+            boolean includeExpired,
+            boolean includeInactive
     );
 }
