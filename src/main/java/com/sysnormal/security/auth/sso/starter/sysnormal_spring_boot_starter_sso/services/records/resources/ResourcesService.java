@@ -3,11 +3,11 @@ package com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_ss
 import com.sysnormal.commons.core.DefaultDataSwap;
 import com.sysnormal.commons.core.utils_core.JsonUtils;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.Resource;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.entities.sso.ResourceType;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.database.repositories.sso.ResourcesRepository;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.auth.AuthenticationService;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.records.BaseSsoRecordsService;
 import io.jsonwebtoken.Claims;
-import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,26 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
 
     public ResourcesService(ResourcesRepository repository) {
         super(Resource.class, repository);
+    }
+
+    /*
+     * report-service and server-service find the table of a TABLE resource by its name. The unique key of
+     * resources includes the parent, so two TABLE resources with the same name under different parents pass
+     * the database - and both would protect the same table with different grants, with no way for the
+     * consumer to decide which one holds.
+     */
+    @Override
+    protected String validateBeforeSave(Resource entity, DefaultDataSwap result) {
+        if (entity.getResourceTypeId() != null
+                && entity.getResourceTypeId() == ResourceType.TABLE_RESOURCE_ID
+                && entity.getDeletedAt() == null
+                && entity.getName() != null
+                && repository.existsTableResourceWithName(entity.getDomainId(), entity.getName(), entity.getId())) {
+            result.httpStatusCode = HttpStatus.CONFLICT.value();
+            return "there is already a TABLE resource named '" + entity.getName() + "' in domain " + entity.getDomainId()
+                    + ": the consumers identify the table by the name, so it must be unique in the domain";
+        }
+        return null;
     }
 
     public DefaultDataSwap getAlloweds(JsonNode params) {
@@ -143,7 +163,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             boolean includeDeleted = JsonUtils.jsonNodeTo01(queryParams.path("includeDeleted")) == 1;
             boolean includeExpired = JsonUtils.jsonNodeTo01(queryParams.path("includeExpired")) == 1;
             boolean includeInactive = JsonUtils.jsonNodeTo01(queryParams.path("includeInactive")) == 1;
-            result.data = repository.findResourcePermissions(domainId, resourceTypeId, accessProfileId, agentId, resourcePaths, JoinType.INNER, includeDeleted, includeExpired, includeInactive);
+            result.data = repository.findResourcePermissions(domainId, resourceTypeId, accessProfileId, agentId, resourcePaths, true, includeDeleted, includeExpired, includeInactive);
             result.success = true;
         } catch (Exception e) {
             result.setException(e);
@@ -168,7 +188,7 @@ public class ResourcesService extends BaseSsoRecordsService<Resource, ResourcesR
             boolean includeDeleted = JsonUtils.jsonNodeTo01(queryParams.path("includeDeleted")) == 1;
             boolean includeExpired = JsonUtils.jsonNodeTo01(queryParams.path("includeExpired")) == 1;
             boolean includeInactive = JsonUtils.jsonNodeTo01(queryParams.path("includeInactive")) == 1;
-            result.data = repository.findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, JoinType.LEFT, includeDeleted, includeExpired, includeInactive);
+            result.data = repository.findResourcePermissions(domainIds, resourceTypeIds, accessProfileIds, agentIds, resourcePaths, false, includeDeleted, includeExpired, includeInactive);
             result.success = true;
         } catch (Exception e) {
             result.setException(e);

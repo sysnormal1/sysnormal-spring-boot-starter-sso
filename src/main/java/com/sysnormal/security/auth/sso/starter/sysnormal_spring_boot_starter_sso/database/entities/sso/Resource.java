@@ -57,6 +57,18 @@ public class Resource extends BaseSsoEntity<Resource> {
     @Check(constraints = "show_in_menu in (0,1)")
     private byte showInMenu = 1;
 
+    /*
+     * What holds for the agent that NO grant reaches: 1 denies, 0 allows (access and view only).
+     *
+     * Defaults to 1 because a resource registered without anyone deciding cannot be born open: that is the
+     * fail-open the whole permission model exists to avoid. It also keeps every resource that existed before
+     * this column behaving as it did.
+     */
+    @Column(name = "is_restricted", nullable = false)
+    @ColumnDefault("1")
+    @Check(constraints = "is_restricted in (0,1)")
+    private byte isRestricted = 1;
+
     @Column(name = "json_data", length = Integer.MAX_VALUE)
     private String jsonData;
 

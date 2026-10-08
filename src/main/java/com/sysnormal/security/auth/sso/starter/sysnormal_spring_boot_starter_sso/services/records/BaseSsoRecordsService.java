@@ -109,6 +109,15 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
         return result;
     }
 
+    /*
+     * Rules an entity must obey before it is saved, by put or by patch, that the database cannot express.
+     * Return null when the entity is valid; otherwise fill result.httpStatusCode and return the message.
+     * On patch it receives the managed entity already merged with the request, so it sees the final state.
+     */
+    protected String validateBeforeSave(E entity, DefaultDataSwap result) {
+        return null;
+    }
+
     public DefaultDataSwap put(JsonNode params){
         DefaultDataSwap result = new DefaultDataSwap();
         try {
@@ -119,6 +128,11 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
 
             // Converte JSON → Entity concreta
             E entity = objectMapper.convertValue(params, entityClass);
+
+            String invalid = validateBeforeSave(entity, result);
+            if (invalid != null) {
+                throw new IllegalArgumentException(invalid);
+            }
 
             // Persistência
             E saved = repository.save(entity);
@@ -146,6 +160,11 @@ public abstract class BaseSsoRecordsService<E extends BaseSsoEntity<E>,R extends
             E managed = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
 
             objectMapper.readerForUpdating(managed).readValue(params);
+
+            String invalid = validateBeforeSave(managed, result);
+            if (invalid != null) {
+                throw new IllegalArgumentException(invalid);
+            }
             // Persistência
 
             E saved = repository.save(managed);

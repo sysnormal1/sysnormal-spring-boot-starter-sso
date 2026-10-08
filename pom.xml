@@ -19,7 +19,7 @@
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
 
@@ -51,7 +51,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>4.0.5</version>
+				<version>4.1.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -138,12 +138,12 @@
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.core</groupId>
 			<artifactId>default-data-swap-core</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
+			<version>0.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.core</groupId>
 			<artifactId>utils-core</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
+			<version>0.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.sysnormal1.commons.spring</groupId>
@@ -186,7 +186,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.15.0</version>
+				<version>3.16.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

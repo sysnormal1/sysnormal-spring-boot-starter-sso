@@ -53,5 +53,43 @@ public record ResourcePermissionView(
          * which would be no better than not being able to ask.
          */
         Long resourceRecordStatusId,
-        Long resourcePermissionRecordStatusId
-) {}
+        Long resourcePermissionRecordStatusId,
+
+        /*
+         * What holds for the agent that no grant reaches: 1 denies, 0 allows. It is the only way a consumer
+         * can tell a row with resourcePermissionId null - an open resource nobody granted - from a grant.
+         */
+        Byte resourceIsRestricted
+) {
+
+    /*
+     * The flags of an open resource that no applicable grant reaches.
+     *
+     * Access and view, and never create, change or delete: on a data table the difference does not show, on a
+     * registration screen it does - opening all five would hand deletion to everyone who can open the screen.
+     * Whoever has to write on an open resource gets an explicit grant, as before.
+     */
+    public static final byte OPEN_BY_DEFAULT_ALLOWED_ACCESS = 1;
+    public static final byte OPEN_BY_DEFAULT_ALLOWED_VIEW = 1;
+    public static final byte OPEN_BY_DEFAULT_ALLOWED_CREATE = 0;
+    public static final byte OPEN_BY_DEFAULT_ALLOWED_CHANGE = 0;
+    public static final byte OPEN_BY_DEFAULT_ALLOWED_DELETE = 0;
+
+    public ResourcePermissionView withOpenByDefaultFlags() {
+        return new ResourcePermissionView(
+                resourceDomainId, resourceId, resourceParentId, resourceTypeId, resourceName, resourcePath,
+                resourceIcon, resourceNumericOrder, resourceShowInMenu,
+                resourcePermissionId, resourcePermissionAccessProfileId, resourcePermissionAgentId,
+                OPEN_BY_DEFAULT_ALLOWED_ACCESS,
+                OPEN_BY_DEFAULT_ALLOWED_VIEW,
+                OPEN_BY_DEFAULT_ALLOWED_CREATE,
+                OPEN_BY_DEFAULT_ALLOWED_CHANGE,
+                OPEN_BY_DEFAULT_ALLOWED_DELETE,
+                resourceDeletedAt, resourcePermissionDeletedAt, resourcePermissionStartAt, resourcePermissionEndAt,
+                resourceIdAtOrigin, resourceDescription, resourceJsonData,
+                resourcePermissionCondition, resourcePermissionJsonData,
+                resourceRecordStatusId, resourcePermissionRecordStatusId,
+                resourceIsRestricted
+        );
+    }
+}
