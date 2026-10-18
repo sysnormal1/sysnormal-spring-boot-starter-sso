@@ -10,6 +10,7 @@ import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.auth.google.GoogleAuthProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.properties.security.SecurityProperties;
 import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.auth.AuthenticationService;
+import com.sysnormal.security.auth.sso.starter.sysnormal_spring_boot_starter_sso.services.auth.SocialLoginRedirect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,15 +57,23 @@ public class GoogleAuthService {
         this.securityProperties = securityProperties;
         this.authenticationService = authenticationService;
         this.agentsRepository = agentsRepository;
+        if (StringUtils.hasText(properties.getRedirectUri())) {
+            logger.warn("spring.auth.google.redirect-uri está configurado e é ignorado: o redirectUri vem do front, no corpo do get_login_url e do handle_code");
+        }
     }
 
-    public DefaultDataSwap getLoginUrl() {
+    public DefaultDataSwap getLoginUrl(String redirectUri) {
+        DefaultDataSwap rejected = SocialLoginRedirect.rejectIfMissing(redirectUri);
+        if (rejected != null) {
+            return rejected;
+        }
         DefaultDataSwap result = new DefaultDataSwap();
         result.data = GOOGLE_AUTH_URL + "?"
                 + "client_id="+properties.getClientId()
                 +"&response_type=code"
                 +"&scope=openid%20email%20profile"
-                +"&access_type=offline";
+                +"&access_type=offline"
+                + SocialLoginRedirect.queryParameter(redirectUri);
         result.success = true;
         return result;
     }
@@ -72,6 +81,11 @@ public class GoogleAuthService {
 
 
     public DefaultDataSwap handleCode(AgentAuthDto agentAuthDto) {
+        DefaultDataSwap rejected = SocialLoginRedirect.rejectIfMissing(agentAuthDto == null ? null : agentAuthDto.getRedirectUri());
+        if (rejected != null) {
+            return rejected;
+        }
+        agentAuthDto.setRedirectUri(agentAuthDto.getRedirectUri().trim());
         DefaultDataSwap result = new DefaultDataSwap();
         try {
             logger.debug("handling google code {}, redirectUri {}", agentAuthDto.getCode(), agentAuthDto.getRedirectUri());

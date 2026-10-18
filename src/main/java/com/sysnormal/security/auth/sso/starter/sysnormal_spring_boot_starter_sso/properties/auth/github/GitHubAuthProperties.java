@@ -13,5 +13,10 @@ public class GitHubAuthProperties {
     private boolean enabled = false;
     private String clientId = null;
     private String clientSecret = null;
+    /**
+     * Ignorado. O {@code redirectUri} vem do front, no corpo do {@code get_login_url}
+     * e do {@code handle_code}; fica só para o serviço avisar no log quem ainda o configura.
+     */
+    @Deprecated
     private String redirectUri = null;
 }

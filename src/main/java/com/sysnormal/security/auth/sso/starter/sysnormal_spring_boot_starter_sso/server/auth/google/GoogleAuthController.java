@@ -32,9 +32,9 @@ public class GoogleAuthController {
      * @return response entity
      */
     @PostMapping("/get_login_url")
-    public ResponseEntity<DefaultDataSwap> getLoginUrl() {
+    public ResponseEntity<DefaultDataSwap> getLoginUrl(@RequestBody(required = false) AgentAuthDto agentAuthDto) {
         logger.debug("requested get_login_url");
-        return ResponseUtils.sendDefaultDataSwapResponse(googleAuthService.getLoginUrl());
+        return ResponseUtils.sendDefaultDataSwapResponse(googleAuthService.getLoginUrl(agentAuthDto == null ? null : agentAuthDto.getRedirectUri()));
     }
 
     @PostMapping("/handle_code")

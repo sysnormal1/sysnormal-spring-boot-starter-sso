@@ -207,14 +207,15 @@ The google and github oauth2 work equals:
 +--------------------+         +----------------+                +-----------+                     +--------+
       |                               |                               |                                  |
       |--- (1) Front request to Sso Google auth URL                   |                                  |
-      |    (/auth/google/get_login_url) ----------------------------->|                                  |
-      |<-- (2) Sso return auth URL to Front---------------------------|                                  |
+      |    (/auth/google/get_login_url, body {redirectUri}) --------->|                                  |
+      |<-- (2) Sso return auth URL to Front, redirect_uri included ---|                                  |
       |                               |                               |                                  |
-      |--- (3) Front redirect user to Google received url adding redirect_uri parameter to callback----->|
+      |--- (3) Front redirect user to the received url, unchanged -------------------------------------->|
       |                               |                               |     (4) Google auth process -----|
       |<-- (5) Google redirect to Front redirect_uri with ?code=XYZ -------------------------------------|
       |--- (6) Front get code from url parameter                      |                                  |
-      |--- (7) Front send code to Sso (/auth/google/handle_code) ---->|                                  |
+      |--- (7) Front send code + redirectUri to Sso                   |                                  |
+      |    (/auth/google/handle_code) ------------------------------->|                                  |
       |                               |                               |-- (8) Exchange code for token -->|
       |                               |                               |<- (9) Receive token + user info--|
       |                               |                               |-- (10) Register/Update user DB   |
@@ -228,15 +229,15 @@ The google and github oauth2 work equals:
       |<-- (16) Back responds --------|                               |                                  |
       |                               |                               |                                  |
 ```
-1. The client (frontend) requests the Google authentication URL from the SSO.
+1. The client (frontend) requests the Google authentication URL from the SSO, sending in the body the `redirectUri` it wants the provider to come back to.
 
-2. The SSO returns the URL with client_id.
+2. The SSO returns the URL with client_id and the `redirect_uri` already included (URL-encoded). Without `redirectUri` in the body the SSO answers `417` with `missing redirectUri` instead of a URL the provider would reject.
 
-3. The frontend add redirect_uri to url parameters and redirects the user to the Google login page.
+3. The frontend redirects the user to the received URL as is — it must **not** add `redirect_uri` itself, or the parameter goes twice.
 
 4. After logging in, Google redirects back to the frontend at redirect_uri indicated with a code.
 
-5. The frontend get this code and sends to the SSO's /auth/google/handle_code endpoint.
+5. The frontend get this code and sends it to the SSO's /auth/google/handle_code endpoint, with the **same** `redirectUri` used in step 1 (the provider checks that both match). `handle_code` also answers `417` when `redirectUri` is missing.
 
 6. The SSO exchanges the code for an access token with Google.
 
@@ -247,6 +248,8 @@ The google and github oauth2 work equals:
 9. The SSO returns an SSO JWT token to the frontend.
 
 10. In the nexts requests to back, front send token autorization and back api check it on sso  
+
+> **The redirect URI belongs to the front, the URL to the SSO.** The SSO does not configure nor validate which `redirect_uri` is used — that is the front's call, and the provider already rejects any address not registered in its console. But the parameter is mandatory for the provider, so the SSO requires it on both endpoints. The `spring.auth.google.redirect-uri` and `spring.auth.github.redirect-uri` properties are ignored; the SSO logs a warning on startup when they are still set.
 
 ---
 
